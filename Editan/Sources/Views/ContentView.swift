@@ -1,0 +1,51 @@
+import SwiftUI
+
+struct ContentView: View {
+    @EnvironmentObject private var store: BufferStore
+
+    var body: some View {
+        NavigationSplitView {
+            SidebarView()
+                .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 360)
+        } detail: {
+            detailView
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    store.showPreview.toggle()
+                } label: {
+                    Label("プレビュー", systemImage: "sidebar.trailing")
+                }
+                .help("プレビューの表示/非表示 (⇧⌘P)")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var detailView: some View {
+        if let buffer = store.selectedBuffer {
+            let textBinding = Binding(
+                get: { store.buffers.first(where: { $0.id == buffer.id })?.content ?? "" },
+                set: { store.updateContent(id: buffer.id, $0) }
+            )
+            HSplitView {
+                PlainTextEditor(text: textBinding)
+                    .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
+                if store.showPreview && buffer.isMarkdown {
+                    MarkdownPreview(markdown: buffer.content)
+                        .frame(minWidth: 280, maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
+            .id(buffer.id)
+            .navigationTitle(buffer.title)
+            .navigationSubtitle(buffer.fileURL?.path(percentEncoded: false) ?? "スクラッチ")
+        } else {
+            ContentUnavailableView(
+                "バッファがありません",
+                systemImage: "note.text",
+                description: Text("⌘N で新規バッファを作成できます")
+            )
+        }
+    }
+}

@@ -1,0 +1,14 @@
+# XcodeGen で生成されるため project.yml が正
+*.xcodeproj
+
+# Xcode
+DerivedData/
+xcuserdata/
+*.xcuserstate
+
+# SwiftPM
+.build/
+.swiftpm/
+
+# macOS
+.DS_Store
