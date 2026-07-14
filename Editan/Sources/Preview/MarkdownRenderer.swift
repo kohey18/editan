@@ -28,11 +28,53 @@ enum MarkdownRenderer {
         <head>
         <meta charset="utf-8">
         <style>\(css)</style>
+        <style>
+        @media (prefers-color-scheme: light) { \(themeLight) }
+        @media (prefers-color-scheme: dark) { \(themeDark) }
+        pre code.hljs { background: transparent; padding: 0; }
+        </style>
+        <script>\(highlightJS)</script>
         </head>
-        <body><article>\(body)</article></body>
+        <body><article>\(body)</article>
+        <script>\(setupScript)</script>
+        </body>
         </html>
         """
     }
+
+    // MARK: - highlight.js(同梱、オフライン動作)
+
+    private static let highlightJS = loadResource("highlight.min", "js")
+    private static let themeLight = loadResource("github.min", "css")
+    private static let themeDark = loadResource("github-dark.min", "css")
+
+    private static func loadResource(_ name: String, _ ext: String) -> String {
+        guard let url = Bundle.main.url(forResource: name, withExtension: ext),
+              let content = try? String(contentsOf: url, encoding: .utf8) else { return "" }
+        return content
+    }
+
+    /// コードブロックのハイライト適用 + ホバーで出るコピーボタン
+    private static let setupScript = """
+    if (window.hljs) { hljs.highlightAll(); }
+    document.querySelectorAll('pre').forEach(function (pre) {
+        var btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = 'コピー';
+        btn.addEventListener('click', function () {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            try { window.webkit.messageHandlers.copyCode.postMessage(text); } catch (e) {}
+            btn.textContent = '✓ コピーしました';
+            btn.classList.add('copied');
+            setTimeout(function () {
+                btn.textContent = 'コピー';
+                btn.classList.remove('copied');
+            }, 1500);
+        });
+        pre.appendChild(btn);
+    });
+    """
 
     private static let css = """
     :root { color-scheme: light dark; }
@@ -66,8 +108,27 @@ enum MarkdownRenderer {
         border-radius: 8px;
         overflow-x: auto;
         line-height: 1.55;
+        position: relative;
     }
     pre code { background: none; padding: 0; }
+    .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        font-size: 11px;
+        font-family: -apple-system, sans-serif;
+        padding: 3px 9px;
+        border-radius: 5px;
+        border: 1px solid rgba(128,128,128,.4);
+        background: rgba(128,128,128,.18);
+        color: inherit;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity .15s;
+    }
+    pre:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { background: rgba(128,128,128,.3); }
+    .copy-btn.copied { opacity: 1; border-color: rgba(60,180,90,.7); }
     blockquote {
         margin: 0 0 1em;
         padding: 0 1em;

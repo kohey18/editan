@@ -7,7 +7,10 @@ struct MarkdownPreview: NSViewRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeNSView(context: Context) -> WKWebView {
-        let webView = WKWebView()
+        let configuration = WKWebViewConfiguration()
+        // コードブロックのコピーボタン → ネイティブでペーストボードに書く
+        configuration.userContentController.add(context.coordinator, name: "copyCode")
+        let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
         context.coordinator.webView = webView
         return webView
@@ -17,7 +20,17 @@ struct MarkdownPreview: NSViewRepresentable {
         context.coordinator.render(markdown: markdown)
     }
 
-    final class Coordinator: NSObject, WKNavigationDelegate {
+    final class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+        func userContentController(
+            _ userContentController: WKUserContentController,
+            didReceive message: WKScriptMessage
+        ) {
+            guard message.name == "copyCode", let text = message.body as? String else { return }
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(text, forType: .string)
+        }
+
         weak var webView: WKWebView?
         private var pending: DispatchWorkItem?
         private var lastRendered: String?

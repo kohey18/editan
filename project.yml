@@ -14,7 +14,8 @@ targets:
     platform: macOS
     sources:
       - Editan/Sources
-      - Editan/Resources
+      - path: Editan/Resources
+        buildPhase: resources
     dependencies:
       - package: swift-markdown
         product: Markdown
