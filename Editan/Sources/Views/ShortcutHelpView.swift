@@ -31,6 +31,10 @@ struct ShortcutHelpView: View {
             Shortcut(key: "⇧⌘F", label: "Markdown を整形"),
             Shortcut(key: "⇧⌘P", label: "プレビュー表示切替"),
         ]),
+        Group(title: "変換 (LLM)", items: [
+            Shortcut(key: "⌥⌘1〜9", label: "変換テンプレート実行"),
+            Shortcut(key: "⌘,", label: "設定(テンプレート編集)"),
+        ]),
         Group(title: "その他", items: [
             Shortcut(key: "⌘F", label: "検索"),
         ]),

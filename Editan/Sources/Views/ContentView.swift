@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var store: BufferStore
+    @EnvironmentObject private var transforms: TransformStore
 
     var body: some View {
         NavigationSplitView {
@@ -9,6 +10,10 @@ struct ContentView: View {
                 .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 360)
         } detail: {
             detailView
+        }
+        .sheet(isPresented: $transforms.showSheet) {
+            TransformResultView()
+                .environmentObject(transforms)
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {

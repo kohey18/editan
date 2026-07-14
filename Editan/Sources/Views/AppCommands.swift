@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AppCommands: Commands {
     @ObservedObject var store: BufferStore
+    @ObservedObject var transforms: TransformStore
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
@@ -31,6 +32,21 @@ struct AppCommands: Commands {
                 store.showPreview.toggle()
             }
             .keyboardShortcut("p", modifiers: [.command, .shift])
+        }
+        CommandMenu("変換") {
+            ForEach(Array(transforms.templates.prefix(9).enumerated()), id: \.element.id) { pair in
+                Button(pair.element.name) {
+                    transforms.run(pair.element)
+                }
+                .keyboardShortcut(
+                    KeyEquivalent(Character("\(pair.offset + 1)")),
+                    modifiers: [.command, .option]
+                )
+            }
+            Divider()
+            Button("テンプレートを編集…") {
+                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            }
         }
         CommandMenu("バッファ") {
             ForEach(Array(store.buffers.prefix(9).enumerated()), id: \.element.id) { pair in
