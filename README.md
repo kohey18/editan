@@ -1,21 +1,26 @@
 # Editan
 
-「書く → 変換する → コピーして貼る」ための macOS 用ステージングエディタ。
+A staging editor for macOS: **write → transform → copy → paste anywhere**.
 
-Claude Code へのプロンプト、Gmail での本文、Slack への貼り付けなど、**最終的に他のアプリに貼るテキスト**を書く場所として使う。クラウド同期なし、Mac 専用。
+Editan is the place to write text that ends up in other apps — prompts for Claude Code, email bodies for Gmail, Markdown for Slack or Notion. No cloud sync, macOS only.
 
-![Editan のスクリーンショット。左にバッファ一覧、中央に Markdown シンタックスハイライト付きエディタ、右に言語別コードハイライト付きプレビュー](docs/screenshot.png)
+![Editan screenshot: buffer list on the left, Markdown editor with syntax highlighting in the middle, preview pane with per-language code highlighting on the right](docs/screenshot.png)
 
-## 特徴
+## Features
 
-- コピーは常にプレーンテキスト(リッチテキストが混入しない)
-- スクラッチバッファ中心(保存操作なしで自動永続化)+ .md ファイルも開ける
-- Markdown の分割ペインプレビュー
-- スマート引用符・自動修正などのお節介は全オフ
+- **⌘C always copies plain text** — rich text never sneaks into your clipboard
+- Scratch-buffer based: no save dialogs, everything auto-persists; regular `.md` files can be opened too
+- Split-pane Markdown preview with per-language code highlighting (highlight.js bundled, works offline) and a copy button on code blocks
+- Markdown syntax highlighting in the editor, list/quote continuation on newline, formatter (⇧⌘F)
+- Copy for Slack (⇧⌘C, mrkdwn-style) and copy as rich text (⌥⌘C, pastes formatted into Gmail)
+- LLM transforms (keigo/polite Japanese, proofread, summarize, custom templates) via the `claude -p` CLI — runs **within your Claude subscription**, no API billing
+- Send the current buffer to Notion as a new page (⇧⌘N)
+- Global hotkey ⌥⌘E and a menu bar extra to bring Editan up from anywhere
+- Smart quotes and autocorrect are always off
 
-## 開発
+## Development
 
-必要なもの: Xcode 16+, [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+Requirements: Xcode 16+, [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 
 ```sh
 brew install xcodegen
@@ -23,54 +28,51 @@ xcodegen generate
 open Editan.xcodeproj
 ```
 
-CLI でビルドする場合:
+Build from the CLI:
 
 ```sh
 xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Debug build
 ```
 
-Release ビルドを `/Applications` にインストール:
+Install a Release build into `/Applications`:
 
 ```sh
 ./Scripts/install.sh
 ```
 
-`.xcodeproj` はコミットしない。`project.yml` が正。
+`.xcodeproj` is not committed — `project.yml` is the source of truth.
 
-## 他の Mac にインストールする
+## Installing on another Mac
 
-### 方法 1: ソースからビルド(推奨)
+### Option 1: build from source (recommended)
 
 ```sh
-# 前提: macOS 14+ / Xcode 16+(App Store から)/ Homebrew
-xcode-select --install            # 未導入なら
+# Prerequisites: macOS 14+, Xcode 16+ (App Store), Homebrew
+xcode-select --install            # if not installed yet
 brew install xcodegen
 git clone git@github.com:kohey18/editan.git
 cd editan
-./Scripts/install.sh              # /Applications/Editan.app にインストールされる
+./Scripts/install.sh              # installs /Applications/Editan.app
 ```
 
-### 方法 2: ビルド済み .app をコピー
+### Option 2: copy a prebuilt .app
 
-ビルド済みの Mac から `/Applications/Editan.app` を AirDrop / USB 等で相手の `/Applications` にコピーする。
+Copy `/Applications/Editan.app` from a Mac that built it (AirDrop, USB, etc.) into the other Mac's `/Applications`.
 
-署名が ad-hoc(未公証)のため、初回起動でブロックされた場合は:
+The app is ad-hoc signed (not notarized), so if the first launch is blocked:
 
 ```sh
 xattr -dr com.apple.quarantine /Applications/Editan.app
 ```
 
-または Finder で右クリック →「開く」。
+or right-click the app in Finder and choose "Open".
 
-### 補足
+### Notes
 
-- **LLM 変換(敬語化など)**を使うには、その Mac に Claude Code CLI(`claude`)がインストールされ、ログイン済みであること(変換はサブスク内で実行される)
-- Notion 転記は設定(⌘,)→ Notion タブでトークンと親ページ ID を Mac ごとに設定する
-- スクラッチバッファは `~/Library/Application Support/Editan/` に保存される(端末間同期はしない設計)
+- LLM transforms require the Claude Code CLI (`claude`) to be installed and logged in on that Mac (transforms run within your Claude subscription)
+- Notion export is configured per machine: Settings (⌘,) → Notion tab (integration token and parent page ID)
+- Scratch buffers are stored in `~/Library/Application Support/Editan/` (no sync across machines by design)
 
-## ロードマップ
+## License
 
-- [x] Phase 1: MVP(バッファ管理 / プレーンコピー保証 / MD プレビュー)
-- [x] Phase 2: MD シンタックスハイライト / フォーマッタ / Copy for Slack / Copy as HTML
-- [x] Phase 3: LLM 変換(敬語変換など、`claude -p` 経由でサブスク内利用)
-- [x] Phase 4: Notion 転記 / グローバルホットキー(⌥⌘E)/ メニューバー常駐 / 選択時アクションバー / アプリアイコン
+[MIT](LICENSE)
