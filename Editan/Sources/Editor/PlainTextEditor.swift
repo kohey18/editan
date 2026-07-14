@@ -29,6 +29,7 @@ final class PlainTextView: NSTextView {
 
 struct PlainTextEditor: NSViewRepresentable {
     @Binding var text: String
+    var highlightsMarkdown = true
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
@@ -37,7 +38,8 @@ struct PlainTextEditor: NSViewRepresentable {
         textView.isRichText = false
         textView.importsGraphics = false
         textView.allowsUndo = true
-        textView.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
+        textView.font = MarkdownHighlighter.baseFont
+        textView.typingAttributes = MarkdownHighlighter.baseAttributes
         textView.isAutomaticQuoteSubstitutionEnabled = false
         textView.isAutomaticDashSubstitutionEnabled = false
         textView.isAutomaticTextReplacementEnabled = false
@@ -57,6 +59,9 @@ struct PlainTextEditor: NSViewRepresentable {
         textView.autoresizingMask = [.width]
         textView.textContainer?.widthTracksTextView = true
         textView.string = text
+        if highlightsMarkdown {
+            MarkdownHighlighter.highlight(textView)
+        }
 
         let scrollView = NSScrollView()
         scrollView.documentView = textView
@@ -73,11 +78,15 @@ struct PlainTextEditor: NSViewRepresentable {
             textView.string = text
             let location = min(selection.location, (text as NSString).length)
             textView.setSelectedRange(NSRange(location: location, length: 0))
+            if highlightsMarkdown {
+                MarkdownHighlighter.highlight(textView)
+            }
         }
     }
 
     final class Coordinator: NSObject, NSTextViewDelegate {
         var parent: PlainTextEditor
+        private var pendingHighlight: DispatchWorkItem?
 
         init(_ parent: PlainTextEditor) {
             self.parent = parent
@@ -86,6 +95,21 @@ struct PlainTextEditor: NSViewRepresentable {
         func textDidChange(_ notification: Notification) {
             guard let textView = notification.object as? NSTextView else { return }
             parent.text = textView.string
+            scheduleHighlight(textView)
+        }
+
+        private func scheduleHighlight(_ textView: NSTextView) {
+            guard parent.highlightsMarkdown else { return }
+            pendingHighlight?.cancel()
+            let work = DispatchWorkItem { [weak textView] in
+                MainActor.assumeIsolated {
+                    // IME 変換中に属性を触ると変換が壊れるため、確定後の変更イベントに任せる
+                    guard let textView, !textView.hasMarkedText() else { return }
+                    MarkdownHighlighter.highlight(textView)
+                }
+            }
+            pendingHighlight = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: work)
         }
     }
 }

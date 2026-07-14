@@ -10,13 +10,18 @@ private struct HardLineBreaks: MarkupRewriter {
 }
 
 enum MarkdownRenderer {
-    static func html(from markdown: String) -> String {
+    /// ページ装飾なしの HTML 本文。リッチテキストコピー(Gmail 貼り付け等)にも使う。
+    static func body(from markdown: String) -> String {
         var document = Document(parsing: markdown)
         var rewriter = HardLineBreaks()
         if let rewritten = rewriter.visit(document) as? Document {
             document = rewritten
         }
-        let body = HTMLFormatter.format(document)
+        return HTMLFormatter.format(document)
+    }
+
+    static func html(from markdown: String) -> String {
+        let body = body(from: markdown)
         return """
         <!DOCTYPE html>
         <html>

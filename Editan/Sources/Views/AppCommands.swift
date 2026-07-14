@@ -16,6 +16,16 @@ struct AppCommands: Commands {
             Button("別名で保存…") { store.saveSelectedAs() }
                 .keyboardShortcut("s", modifiers: [.command, .shift])
         }
+        CommandGroup(after: .pasteboard) {
+            Divider()
+            Button("Slack 用にコピー") { store.copyForSlack() }
+                .keyboardShortcut("c", modifiers: [.command, .shift])
+            Button("リッチテキストとしてコピー") { store.copyAsRichText() }
+                .keyboardShortcut("c", modifiers: [.command, .option])
+            Divider()
+            Button("Markdown を整形") { store.formatMarkdown() }
+                .keyboardShortcut("f", modifiers: [.command, .shift])
+        }
         CommandGroup(after: .toolbar) {
             Button(store.showPreview ? "プレビューを隠す" : "プレビューを表示") {
                 store.showPreview.toggle()

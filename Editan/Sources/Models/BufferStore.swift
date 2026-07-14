@@ -1,4 +1,5 @@
 import AppKit
+import Markdown
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -157,6 +158,51 @@ final class BufferStore: ObservableObject {
         buffers[idx].fileURL = url
         buffers[idx].hasUnsavedChanges = false
         saveIndex()
+    }
+
+    // MARK: - 変換・コピー
+
+    /// 変換系コマンドの対象テキスト。エディタに選択範囲があればそれ、なければ全文。
+    private func sourceText() -> String? {
+        if let textView = EditorAccess.currentTextView() {
+            let selection = textView.selectedRange()
+            if selection.length > 0 {
+                return (textView.string as NSString).substring(with: selection)
+            }
+            return textView.string
+        }
+        return selectedBuffer?.content
+    }
+
+    func copyForSlack() {
+        guard let text = sourceText() else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(SlackMarkdown.convert(text), forType: .string)
+    }
+
+    func copyAsRichText() {
+        guard let text = sourceText() else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(MarkdownRenderer.body(from: text), forType: .html)
+        pasteboard.setString(text, forType: .string)
+    }
+
+    func formatMarkdown() {
+        guard let idx = selectedIndex else { return }
+        let source = buffers[idx].content
+        var formatted = Document(parsing: source).format()
+        if !formatted.isEmpty, !formatted.hasSuffix("\n"), source.hasSuffix("\n") {
+            formatted += "\n"
+        }
+        guard formatted != source else { return }
+        if let textView = EditorAccess.currentTextView() {
+            // Undo に載せるため NSTextView 経由で置換(textDidChange で store に反映される)
+            EditorAccess.replaceAllText(with: formatted, in: textView)
+        } else {
+            updateContent(id: buffers[idx].id, formatted)
+        }
     }
 
     // MARK: - 永続化
