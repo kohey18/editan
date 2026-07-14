@@ -183,10 +183,14 @@ final class BufferStore: ObservableObject {
 
     func copyAsRichText() {
         guard let text = sourceText() else { return }
+        let html = "<meta charset=\"utf-8\">" + MarkdownRenderer.body(from: text)
+        // 1つの NSPasteboardItem に両フレーバーを載せる(setString を型ごとに呼ぶ方式は不確実)
+        let item = NSPasteboardItem()
+        item.setString(html, forType: .html)
+        item.setString(text, forType: .string)
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
-        pasteboard.setString(MarkdownRenderer.body(from: text), forType: .html)
-        pasteboard.setString(text, forType: .string)
+        pasteboard.writeObjects([item])
     }
 
     func formatMarkdown() {
