@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SidebarView: View {
     @EnvironmentObject private var store: BufferStore
+    @State private var showShortcutHelp = false
 
     var body: some View {
         List(selection: $store.selectedID) {
@@ -15,14 +16,27 @@ struct SidebarView: View {
         }
         .listStyle(.sidebar)
         .safeAreaInset(edge: .bottom) {
-            Button {
-                store.newBuffer()
-            } label: {
-                Label("新規バッファ", systemImage: "plus")
+            HStack {
+                Button {
+                    store.newBuffer()
+                } label: {
+                    Label("新規バッファ", systemImage: "plus")
+                }
+                .buttonStyle(.borderless)
+                Spacer()
+                Button {
+                    showShortcutHelp.toggle()
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.borderless)
+                .help("キーボードショートカット")
+                .popover(isPresented: $showShortcutHelp, arrowEdge: .top) {
+                    ShortcutHelpView()
+                }
             }
-            .buttonStyle(.borderless)
             .padding(10)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

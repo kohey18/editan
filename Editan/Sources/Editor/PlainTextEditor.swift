@@ -12,6 +12,77 @@ final class PlainTextView: NSTextView {
         delete(sender)
     }
 
+    // MARK: - リスト・引用の継続入力
+
+    private static let listPattern = try! NSRegularExpression(
+        pattern: "^([ \\t]*)([-*+]|[0-9]+[.)])([ \\t]+)(\\[[ xX]\\][ \\t]+)?(.*)$"
+    )
+    private static let quotePattern = try! NSRegularExpression(
+        pattern: "^([ \\t]*(?:>[ \\t]?)+)(.*)$"
+    )
+
+    override func insertNewline(_ sender: Any?) {
+        guard !hasMarkedText(), selectedRange().length == 0 else {
+            super.insertNewline(sender)
+            return
+        }
+        let ns = string as NSString
+        let caret = selectedRange().location
+        let lineRange = ns.lineRange(for: NSRange(location: caret, length: 0))
+        var line = ns.substring(with: lineRange)
+        if line.hasSuffix("\n") { line.removeLast() }
+        let lineNS = line as NSString
+        let fullLine = NSRange(location: 0, length: lineNS.length)
+        let caretInLine = caret - lineRange.location
+
+        // リスト項目: インデント + マーカーを引き継ぐ。空項目ならマーカーを消して抜ける
+        if let match = Self.listPattern.firstMatch(in: line, range: fullLine) {
+            let contentRange = match.range(at: 5)
+            let prefixLength = contentRange.location
+            if caretInLine >= prefixLength {
+                let content = lineNS.substring(with: contentRange)
+                if content.trimmingCharacters(in: .whitespaces).isEmpty {
+                    insertText("", replacementRange: NSRange(location: lineRange.location, length: caretInLine))
+                    return
+                }
+                let indent = lineNS.substring(with: match.range(at: 1))
+                let marker = lineNS.substring(with: match.range(at: 2))
+                let spacing = lineNS.substring(with: match.range(at: 3))
+                var nextMarker = marker
+                if let number = Int(marker.dropLast()) {
+                    nextMarker = "\(number + 1)\(marker.suffix(1))"
+                }
+                let checkbox = match.range(at: 4).location != NSNotFound ? "[ ] " : ""
+                insertText("\n" + indent + nextMarker + spacing + checkbox, replacementRange: selectedRange())
+                return
+            }
+        } else if let match = Self.quotePattern.firstMatch(in: line, range: fullLine) {
+            // 引用: "> " を引き継ぐ。空の引用行なら抜ける
+            let prefixLength = match.range(at: 1).length
+            if caretInLine >= prefixLength {
+                let content = lineNS.substring(with: match.range(at: 2))
+                if content.trimmingCharacters(in: .whitespaces).isEmpty {
+                    insertText("", replacementRange: NSRange(location: lineRange.location, length: caretInLine))
+                    return
+                }
+                insertText("\n" + lineNS.substring(with: match.range(at: 1)), replacementRange: selectedRange())
+                return
+            }
+        } else {
+            // 通常行: 行頭の空白インデントを維持
+            var wsLength = 0
+            while wsLength < min(caretInLine, lineNS.length) {
+                let c = lineNS.character(at: wsLength)
+                if c == 0x20 || c == 0x09 { wsLength += 1 } else { break }
+            }
+            if wsLength > 0 {
+                insertText("\n" + lineNS.substring(to: wsLength), replacementRange: selectedRange())
+                return
+            }
+        }
+        super.insertNewline(sender)
+    }
+
     @discardableResult
     private func copySelectionAsPlainText() -> Bool {
         let whole = string as NSString
