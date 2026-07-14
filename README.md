@@ -35,6 +35,37 @@ Release ビルドを `/Applications` にインストール:
 
 `.xcodeproj` はコミットしない。`project.yml` が正。
 
+## 他の Mac にインストールする
+
+### 方法 1: ソースからビルド(推奨)
+
+```sh
+# 前提: macOS 14+ / Xcode 16+(App Store から)/ Homebrew
+xcode-select --install            # 未導入なら
+brew install xcodegen
+git clone git@github.com:kohey18/editan.git
+cd editan
+./Scripts/install.sh              # /Applications/Editan.app にインストールされる
+```
+
+### 方法 2: ビルド済み .app をコピー
+
+ビルド済みの Mac から `/Applications/Editan.app` を AirDrop / USB 等で相手の `/Applications` にコピーする。
+
+署名が ad-hoc(未公証)のため、初回起動でブロックされた場合は:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/Editan.app
+```
+
+または Finder で右クリック →「開く」。
+
+### 補足
+
+- **LLM 変換(敬語化など)**を使うには、その Mac に Claude Code CLI(`claude`)がインストールされ、ログイン済みであること(変換はサブスク内で実行される)
+- Notion 転記は設定(⌘,)→ Notion タブでトークンと親ページ ID を Mac ごとに設定する
+- スクラッチバッファは `~/Library/Application Support/Editan/` に保存される(端末間同期はしない設計)
+
 ## ロードマップ
 
 - [x] Phase 1: MVP(バッファ管理 / プレーンコピー保証 / MD プレビュー)

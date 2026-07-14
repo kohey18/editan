@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcodegen:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(./Scripts/install.sh)",
+      "Bash(pkill -x Editan)",
+      "Bash(pgrep:*)",
+      "Bash(open /Applications/Editan.app)",
+      "Bash(open build/DerivedData/Build/Products/Debug/Editan.app)",
+      "Bash(open build/DerivedData/Build/Products/Release/Editan.app)",
+      "Bash(sips:*)",
+      "Bash(plutil:*)",
+      "Bash(codesign -dv:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)"
+    ]
+  }
+}
