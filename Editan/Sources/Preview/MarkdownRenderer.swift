@@ -1,9 +1,21 @@
 import Foundation
 import Markdown
 
+/// ソフト改行(単一の改行)を <br> として描画させる。
+/// エディタ上の改行がそのままプレビューに反映される(GitHub コメントと同じ挙動)。
+private struct HardLineBreaks: MarkupRewriter {
+    mutating func visitSoftBreak(_ softBreak: SoftBreak) -> Markup? {
+        LineBreak()
+    }
+}
+
 enum MarkdownRenderer {
     static func html(from markdown: String) -> String {
-        let document = Document(parsing: markdown)
+        var document = Document(parsing: markdown)
+        var rewriter = HardLineBreaks()
+        if let rewritten = rewriter.visit(document) as? Document {
+            document = rewritten
+        }
         let body = HTMLFormatter.format(document)
         return """
         <!DOCTYPE html>
@@ -22,12 +34,17 @@ enum MarkdownRenderer {
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
         font-size: 15px;
-        line-height: 1.75;
+        line-height: 1.6;
         margin: 0;
         padding: 24px 32px;
         -webkit-text-size-adjust: 100%;
     }
     article { max-width: 720px; margin: 0 auto; }
+    p { margin: .6em 0; }
+    ul, ol { margin: .4em 0; padding-left: 1.5em; }
+    li { margin: .1em 0; }
+    li > p { margin: 0; }
+    li > ul, li > ol { margin: .1em 0; }
     h1, h2 { border-bottom: 1px solid rgba(128,128,128,.3); padding-bottom: .3em; }
     h1 { font-size: 1.7em; }
     h2 { font-size: 1.4em; }
