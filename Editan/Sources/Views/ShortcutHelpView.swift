@@ -37,6 +37,8 @@ struct ShortcutHelpView: View {
         ]),
         Group(title: "その他", items: [
             Shortcut(key: "⌘F", label: "検索"),
+            Shortcut(key: "⌥⌘E", label: "どこからでも Editan を開く"),
+            Shortcut(key: "⇧⌘N", label: "Notion に送る"),
         ]),
     ]
 

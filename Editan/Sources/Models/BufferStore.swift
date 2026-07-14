@@ -69,6 +69,18 @@ final class BufferStore: ObservableObject {
         selectedID = buffer.id
         try? "".write(to: scratchFileURL(buffer.id), atomically: true, encoding: .utf8)
         saveIndex()
+        focusEditorSoon()
+    }
+
+    /// SwiftUI がビューを作り直した後にエディタへフォーカスを移す。
+    private func focusEditorSoon() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
+            MainActor.assumeIsolated {
+                guard let textView = EditorAccess.currentTextView() else { return }
+                textView.window?.makeFirstResponder(textView)
+                textView.setSelectedRange(NSRange(location: 0, length: 0))
+            }
+        }
     }
 
     func deleteBuffer(_ id: UUID) {
@@ -194,6 +206,19 @@ final class BufferStore: ObservableObject {
     }
 
     func formatMarkdown() {
+        // 選択範囲があればそこだけ整形、なければ全文
+        if let textView = EditorAccess.currentTextView(), textView.selectedRange().length > 0 {
+            let selection = textView.selectedRange()
+            let source = (textView.string as NSString).substring(with: selection)
+            let formatted = Document(parsing: source).format()
+                .trimmingCharacters(in: .newlines)
+            guard formatted != source else { return }
+            if textView.shouldChangeText(in: selection, replacementString: formatted) {
+                textView.textStorage?.replaceCharacters(in: selection, with: formatted)
+                textView.didChangeText()
+            }
+            return
+        }
         guard let idx = selectedIndex else { return }
         let source = buffers[idx].content
         var formatted = Document(parsing: source).format()
@@ -206,6 +231,44 @@ final class BufferStore: ObservableObject {
             EditorAccess.replaceAllText(with: formatted, in: textView)
         } else {
             updateContent(id: buffers[idx].id, formatted)
+        }
+    }
+
+    // MARK: - Notion
+
+    func sendToNotion() {
+        guard let buffer = selectedBuffer else { return }
+        let title = buffer.title
+        let content = buffer.content
+        guard NotionClient.isConfigured else {
+            let alert = NSAlert()
+            alert.messageText = "Notion が未設定です"
+            alert.informativeText = "設定(⌘,)の Notion タブで Integration Token と親ページ ID を設定してください。"
+            alert.addButton(withTitle: "設定を開く")
+            alert.addButton(withTitle: "キャンセル")
+            if alert.runModal() == .alertFirstButtonReturn {
+                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            }
+            return
+        }
+        Task {
+            do {
+                let url = try await NotionClient.createPage(title: title, markdown: content)
+                let alert = NSAlert()
+                alert.messageText = "Notion に送信しました"
+                alert.informativeText = "「\(title)」を作成しました。"
+                alert.addButton(withTitle: "OK")
+                if url != nil { alert.addButton(withTitle: "Notion で開く") }
+                if alert.runModal() == .alertSecondButtonReturn, let url {
+                    NSWorkspace.shared.open(url)
+                }
+            } catch {
+                let alert = NSAlert()
+                alert.messageText = "Notion への送信に失敗しました"
+                alert.informativeText = error.localizedDescription
+                alert.alertStyle = .warning
+                alert.runModal()
+            }
         }
     }
 

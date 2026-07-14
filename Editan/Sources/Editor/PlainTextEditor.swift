@@ -98,9 +98,40 @@ final class PlainTextView: NSTextView {
     }
 }
 
+/// 選択完了時にテキスト上へ浮かぶアクションバー(整形 / 敬語化)。
+private struct SelectionActionBar: View {
+    var onFormat: () -> Void
+    var onKeigo: () -> Void
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Button {
+                onFormat()
+            } label: {
+                Label("整形", systemImage: "wand.and.stars")
+            }
+            Divider().frame(height: 14)
+            Button {
+                onKeigo()
+            } label: {
+                Label("敬語化", systemImage: "bubble.left.and.text.bubble.right")
+            }
+        }
+        .buttonStyle(.borderless)
+        .controlSize(.small)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
+        .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary, lineWidth: 1))
+        .shadow(color: .black.opacity(0.2), radius: 5, y: 2)
+    }
+}
+
 struct PlainTextEditor: NSViewRepresentable {
     @Binding var text: String
     var highlightsMarkdown = true
+    var onFormatSelection: (() -> Void)?
+    var onKeigoSelection: (() -> Void)?
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
@@ -158,6 +189,8 @@ struct PlainTextEditor: NSViewRepresentable {
     final class Coordinator: NSObject, NSTextViewDelegate {
         var parent: PlainTextEditor
         private var pendingHighlight: DispatchWorkItem?
+        private var pendingSelectionBar: DispatchWorkItem?
+        private var selectionBar: NSView?
 
         init(_ parent: PlainTextEditor) {
             self.parent = parent
@@ -166,7 +199,63 @@ struct PlainTextEditor: NSViewRepresentable {
         func textDidChange(_ notification: Notification) {
             guard let textView = notification.object as? NSTextView else { return }
             parent.text = textView.string
+            removeSelectionBar()
             scheduleHighlight(textView)
+        }
+
+        // MARK: - 選択時アクションバー
+
+        func textViewDidChangeSelection(_ notification: Notification) {
+            guard let textView = notification.object as? NSTextView else { return }
+            pendingSelectionBar?.cancel()
+            removeSelectionBar()
+            guard textView.selectedRange().length > 0 else { return }
+            let work = DispatchWorkItem { [weak self, weak textView] in
+                MainActor.assumeIsolated {
+                    guard let self, let textView,
+                          textView.selectedRange().length > 0,
+                          !textView.hasMarkedText() else { return }
+                    self.showSelectionBar(on: textView)
+                }
+            }
+            pendingSelectionBar = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: work)
+        }
+
+        private func showSelectionBar(on textView: NSTextView) {
+            removeSelectionBar()
+            guard let window = textView.window else { return }
+            let range = textView.selectedRange()
+            let screenRect = textView.firstRect(
+                forCharacterRange: NSRange(location: range.location, length: 0), actualRange: nil
+            )
+            guard screenRect != .zero else { return }
+            let windowRect = window.convertFromScreen(screenRect)
+            let local = textView.convert(windowRect, from: nil)
+
+            let bar = NSHostingView(rootView: SelectionActionBar(
+                onFormat: { [weak self] in
+                    self?.removeSelectionBar()
+                    self?.parent.onFormatSelection?()
+                },
+                onKeigo: { [weak self] in
+                    self?.removeSelectionBar()
+                    self?.parent.onKeigoSelection?()
+                }
+            ))
+            let size = bar.fittingSize
+            // 選択開始行の上に出す。上に入らなければ行の下に出す
+            var y = local.minY - size.height - 6
+            if y < 4 { y = local.maxY + 6 }
+            let x = max(4, min(local.minX, textView.bounds.width - size.width - 8))
+            bar.frame = CGRect(x: x, y: y, width: size.width, height: size.height)
+            textView.addSubview(bar)
+            selectionBar = bar
+        }
+
+        private func removeSelectionBar() {
+            selectionBar?.removeFromSuperview()
+            selectionBar = nil
         }
 
         private func scheduleHighlight(_ textView: NSTextView) {

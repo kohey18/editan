@@ -27,6 +27,12 @@ CLI でビルドする場合:
 xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Debug build
 ```
 
+Release ビルドを `/Applications` にインストール:
+
+```sh
+./Scripts/install.sh
+```
+
 `.xcodeproj` はコミットしない。`project.yml` が正。
 
 ## ロードマップ
@@ -34,4 +40,4 @@ xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Debug build
 - [x] Phase 1: MVP(バッファ管理 / プレーンコピー保証 / MD プレビュー)
 - [x] Phase 2: MD シンタックスハイライト / フォーマッタ / Copy for Slack / Copy as HTML
 - [x] Phase 3: LLM 変換(敬語変換など、`claude -p` 経由でサブスク内利用)
-- [ ] Phase 4: Notion 転記 / グローバルホットキー
+- [x] Phase 4: Notion 転記 / グローバルホットキー(⌥⌘E)/ メニューバー常駐 / 選択時アクションバー / アプリアイコン

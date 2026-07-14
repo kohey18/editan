@@ -44,6 +44,12 @@ final class TransformStore: ObservableObject {
 
     // MARK: - 変換実行
 
+    /// 「敬語」を含む名前のテンプレート(なければ先頭)を実行する。選択時アクションバー用。
+    func runKeigo() {
+        guard let template = templates.first(where: { $0.name.contains("敬語") }) ?? templates.first else { return }
+        run(template)
+    }
+
     func run(_ template: TransformTemplate) {
         if case .running = session?.status { return }
         guard let textView = EditorAccess.currentTextView() else { return }

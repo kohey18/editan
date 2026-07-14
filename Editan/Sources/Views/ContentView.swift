@@ -35,7 +35,12 @@ struct ContentView: View {
                 set: { store.updateContent(id: buffer.id, $0) }
             )
             HSplitView {
-                PlainTextEditor(text: textBinding, highlightsMarkdown: buffer.isMarkdown)
+                PlainTextEditor(
+                    text: textBinding,
+                    highlightsMarkdown: buffer.isMarkdown,
+                    onFormatSelection: { store.formatMarkdown() },
+                    onKeigoSelection: { transforms.runKeigo() }
+                )
                     .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
                 if store.showPreview && buffer.isMarkdown {
                     MarkdownPreview(markdown: buffer.content)

@@ -11,11 +11,16 @@ xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Debug build
 
 ソースを追加・削除したら `xcodegen generate` を再実行すること。
 
+Release を `/Applications` に入れるには `./Scripts/install.sh`。
+
 ## 構成
 
 - `Editan/Sources/Models/` — `Buffer`(1ドキュメント)と `BufferStore`(一覧・選択・永続化。スクラッチは `~/Library/Application Support/Editan/` に自動保存)
 - `Editan/Sources/Editor/PlainTextEditor.swift` — NSTextView ラッパー。`PlainTextView` が copy/cut をオーバーライドしてプレーンテキストコピーを保証(このアプリの核。壊さないこと)
 - `Editan/Sources/Preview/` — swift-markdown で HTML 化し WKWebView に表示
+- `Editan/Sources/Transforms/` — LLM 変換(`claude -p` サブプロセス)+ Slack mrkdwn 変換
+- `Editan/Sources/Notion/` — Markdown → Notion ブロック変換と API クライアント(トークンは UserDefaults)
+- `Editan/Sources/Utils/AppActivator.swift` — グローバルホットキー ⌥⌘E(Carbon RegisterEventHotKey)
 
 ## 設計上の約束
 

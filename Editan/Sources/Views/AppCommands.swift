@@ -16,6 +16,9 @@ struct AppCommands: Commands {
                 .keyboardShortcut("s", modifiers: .command)
             Button("別名で保存…") { store.saveSelectedAs() }
                 .keyboardShortcut("s", modifiers: [.command, .shift])
+            Divider()
+            Button("Notion に送る") { store.sendToNotion() }
+                .keyboardShortcut("n", modifiers: [.command, .shift])
         }
         CommandGroup(after: .pasteboard) {
             Divider()
