@@ -93,7 +93,7 @@ final class BufferStore: ObservableObject {
             let alert = NSAlert()
             alert.messageText = "「\(buffer.title)」を削除しますか?"
             alert.informativeText = buffer.isScratch
-                ? "スクラッチバッファの内容は失われます。この操作は取り消せません。"
+                ? "下書きの内容は失われます。この操作は取り消せません。"
                 : "未保存の変更は失われます(ファイル自体は削除されません)。"
             alert.alertStyle = .warning
             alert.addButton(withTitle: "削除")

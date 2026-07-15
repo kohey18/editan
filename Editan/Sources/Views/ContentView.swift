@@ -59,7 +59,7 @@ struct ContentView: View {
             }
             .id(buffer.id)
             .navigationTitle(buffer.title)
-            .navigationSubtitle(buffer.fileURL?.path(percentEncoded: false) ?? "スクラッチ")
+            .navigationSubtitle(buffer.fileURL?.path(percentEncoded: false) ?? "下書き(自動保存)")
         } else {
             ContentUnavailableView(
                 "バッファがありません",
