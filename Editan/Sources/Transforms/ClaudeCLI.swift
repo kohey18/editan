@@ -62,7 +62,16 @@ enum ClaudeCLI {
                 process.executableURL = URL(fileURLWithPath: executable)
                 process.arguments = arguments
                 var environment = ProcessInfo.processInfo.environment
-                environment["PATH"] = (environment["PATH"] ?? "") + ":/opt/homebrew/bin:/usr/local/bin"
+                // claude CLI は "#!/usr/bin/env node" で node を起動するため、
+                // Volta / nvm など node 管理ツールの bin も PATH に含める
+                let home = NSHomeDirectory()
+                let extraPaths = [
+                    "/opt/homebrew/bin",
+                    "/usr/local/bin",
+                    "\(home)/.volta/bin",
+                    "\(home)/.local/bin",
+                ]
+                environment["PATH"] = (environment["PATH"] ?? "") + ":" + extraPaths.joined(separator: ":")
                 process.environment = environment
 
                 let stdinPipe = Pipe()
