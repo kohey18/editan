@@ -1,5 +1,6 @@
 # XcodeGen で生成されるため project.yml が正
 *.xcodeproj
+Editan/Info.plist
 
 # Xcode
 DerivedData/

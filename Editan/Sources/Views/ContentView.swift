@@ -17,6 +17,16 @@ struct ContentView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
+                if let url = store.selectedBuffer?.fileURL {
+                    Button {
+                        NSWorkspace.shared.activateFileViewerSelecting([url])
+                    } label: {
+                        Label("Finder で表示", systemImage: "folder")
+                    }
+                    .help("このファイルを Finder で表示")
+                }
+            }
+            ToolbarItem(placement: .primaryAction) {
                 Button {
                     store.showPreview.toggle()
                 } label: {

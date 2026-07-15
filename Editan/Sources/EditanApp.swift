@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct EditanApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var store = BufferStore()
     @StateObject private var transforms = TransformStore()
     @StateObject private var formats = FormatStore()
@@ -15,6 +16,7 @@ struct EditanApp: App {
             ContentView()
                 .environmentObject(store)
                 .environmentObject(transforms)
+                .onAppear { appDelegate.store = store }
         }
         .defaultSize(width: 1100, height: 700)
         .commands {
