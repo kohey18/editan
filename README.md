@@ -4,7 +4,7 @@ A staging editor for macOS: **write → transform → copy → paste anywhere**.
 
 Editan is the place to write text that ends up in other apps — prompts for Claude Code, email bodies for Gmail, Markdown for Slack or Notion. No cloud sync, macOS only.
 
-![Editan screenshot: buffer list on the left, Markdown editor with syntax highlighting in the middle, preview pane with per-language code highlighting on the right](docs/screenshot.png)
+![Editan demo: typing Markdown release notes in the editor while the preview pane renders them live with per-language code highlighting](docs/demo.gif)
 
 ## Features
 
