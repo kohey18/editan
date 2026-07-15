@@ -3,6 +3,7 @@ import SwiftUI
 struct AppCommands: Commands {
     @ObservedObject var store: BufferStore
     @ObservedObject var transforms: TransformStore
+    @ObservedObject var formats: FormatStore
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
@@ -35,6 +36,21 @@ struct AppCommands: Commands {
                 store.showPreview.toggle()
             }
             .keyboardShortcut("p", modifiers: [.command, .shift])
+        }
+        CommandMenu("フォーマット") {
+            ForEach(Array(formats.templates.prefix(9).enumerated()), id: \.element.id) { pair in
+                Button(pair.element.name) {
+                    formats.insert(pair.element)
+                }
+                .keyboardShortcut(
+                    KeyEquivalent(Character("\(pair.offset + 1)")),
+                    modifiers: [.command, .control]
+                )
+            }
+            Divider()
+            Button("フォーマットを編集…") {
+                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            }
         }
         CommandMenu("変換") {
             ForEach(Array(transforms.templates.prefix(9).enumerated()), id: \.element.id) { pair in

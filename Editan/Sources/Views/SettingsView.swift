@@ -5,6 +5,8 @@ struct SettingsView: View {
         TabView {
             TransformSettingsView()
                 .tabItem { Label("変換", systemImage: "wand.and.stars") }
+            FormatSettingsView()
+                .tabItem { Label("フォーマット", systemImage: "doc.badge.plus") }
             NotionSettingsView()
                 .tabItem { Label("Notion", systemImage: "paperplane") }
         }

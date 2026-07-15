@@ -4,6 +4,7 @@ import SwiftUI
 struct EditanApp: App {
     @StateObject private var store = BufferStore()
     @StateObject private var transforms = TransformStore()
+    @StateObject private var formats = FormatStore()
 
     init() {
         HotKeyManager.shared.register()
@@ -17,7 +18,7 @@ struct EditanApp: App {
         }
         .defaultSize(width: 1100, height: 700)
         .commands {
-            AppCommands(store: store, transforms: transforms)
+            AppCommands(store: store, transforms: transforms, formats: formats)
         }
 
         MenuBarExtra("Editan", systemImage: "arrow.up.doc") {
@@ -37,6 +38,7 @@ struct EditanApp: App {
         Settings {
             SettingsView()
                 .environmentObject(transforms)
+                .environmentObject(formats)
         }
     }
 }

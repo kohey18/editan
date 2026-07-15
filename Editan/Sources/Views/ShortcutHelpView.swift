@@ -31,6 +31,9 @@ struct ShortcutHelpView: View {
             Shortcut(key: "⇧⌘F", label: "Markdown を整形"),
             Shortcut(key: "⇧⌘P", label: "プレビュー表示切替"),
         ]),
+        Group(title: "フォーマット", items: [
+            Shortcut(key: "⌃⌘1〜9", label: "フォーマットを挿入"),
+        ]),
         Group(title: "変換 (LLM)", items: [
             Shortcut(key: "⌥⌘1〜9", label: "変換テンプレート実行"),
             Shortcut(key: "⌘,", label: "設定(テンプレート編集)"),
@@ -64,7 +67,7 @@ struct ShortcutHelpView: View {
                 }
             }
             Divider()
-            Text("⌘ command ⇧ shift ⌥ option ⌫ delete")
+            Text("⌘ command ⇧ shift ⌥ option ⌃ control ⌫ delete")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
         }
