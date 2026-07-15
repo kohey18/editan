@@ -2,6 +2,8 @@ import SwiftUI
 
 struct TransformResultView: View {
     @EnvironmentObject private var transforms: TransformStore
+    @State private var copied = false
+    @State private var copiedResetTask: Task<Void, Never>?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -59,11 +61,25 @@ struct TransformResultView: View {
 
     private var footer: some View {
         HStack {
-            Button("キャンセル") { transforms.dismiss() }
+            Button("閉じる") { transforms.dismiss() }
                 .keyboardShortcut(.cancelAction)
             Spacer()
-            Button("コピー") { transforms.copyResult() }
-                .disabled(!isDone)
+            Button {
+                transforms.copyResult()
+                copied = true
+                copiedResetTask?.cancel()
+                copiedResetTask = Task {
+                    try? await Task.sleep(for: .seconds(1.5))
+                    if !Task.isCancelled { copied = false }
+                }
+            } label: {
+                if copied {
+                    Label("コピーしました", systemImage: "checkmark")
+                } else {
+                    Text("コピー")
+                }
+            }
+            .disabled(!isDone)
             Button("置き換える") { transforms.applyReplacement() }
                 .keyboardShortcut(.defaultAction)
                 .disabled(!isDone)

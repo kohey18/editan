@@ -245,7 +245,7 @@ final class BufferStore: ObservableObject {
             alert.messageText = "Notion が未設定です"
             alert.informativeText = "設定(⌘,)の Notion タブで Integration Token と親ページ ID を設定してください。"
             alert.addButton(withTitle: "設定を開く")
-            alert.addButton(withTitle: "キャンセル")
+            alert.addButton(withTitle: "閉じる")
             if alert.runModal() == .alertFirstButtonReturn {
                 NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
             }
