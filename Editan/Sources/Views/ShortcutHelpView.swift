@@ -17,7 +17,7 @@ struct ShortcutHelpView: View {
         Group(title: "バッファ", items: [
             Shortcut(key: "⌘N", label: "新規バッファ"),
             Shortcut(key: "⌘1〜9", label: "バッファ切替"),
-            Shortcut(key: "⌘⌫", label: "バッファを削除"),
+            Shortcut(key: "⌘W", label: "バッファを閉じる"),
             Shortcut(key: "⌘O", label: "ファイルを開く"),
             Shortcut(key: "⌘S", label: "保存"),
             Shortcut(key: "⇧⌘S", label: "別名で保存"),

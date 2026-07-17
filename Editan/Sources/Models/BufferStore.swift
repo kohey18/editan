@@ -87,19 +87,19 @@ final class BufferStore: ObservableObject {
         guard let idx = buffers.firstIndex(where: { $0.id == id }) else { return }
         let buffer = buffers[idx]
 
-        let needsConfirm = (buffer.isScratch && !buffer.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            || (!buffer.isScratch && buffer.hasUnsavedChanges)
-        if needsConfirm {
-            let alert = NSAlert()
-            alert.messageText = "「\(buffer.title)」を削除しますか?"
-            alert.informativeText = buffer.isScratch
-                ? "下書きの内容は失われます。この操作は取り消せません。"
-                : "未保存の変更は失われます(ファイル自体は削除されません)。"
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: "削除")
-            alert.addButton(withTitle: "キャンセル")
-            guard alert.runModal() == .alertFirstButtonReturn else { return }
+        let alert = NSAlert()
+        alert.messageText = "「\(buffer.title)」を本当に閉じますか?"
+        if buffer.isScratch {
+            alert.informativeText = "下書きの内容は失われます。この操作は取り消せません。"
+        } else if buffer.hasUnsavedChanges {
+            alert.informativeText = "未保存の変更は失われます(ファイル自体は削除されません)。"
+        } else {
+            alert.informativeText = "ファイル自体は削除されません。"
         }
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "閉じる")
+        alert.addButton(withTitle: "キャンセル")
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
 
         if buffer.isScratch {
             try? FileManager.default.removeItem(at: scratchFileURL(id))

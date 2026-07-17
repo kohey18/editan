@@ -59,7 +59,7 @@ struct SidebarView: View {
                     NSWorkspace.shared.activateFileViewerSelecting([url])
                 }
             }
-            Button("削除", role: .destructive) {
+            Button("閉じる", role: .destructive) {
                 store.deleteBuffer(buffer.id)
             }
         }

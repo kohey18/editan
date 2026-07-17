@@ -78,10 +78,10 @@ struct AppCommands: Commands {
                 )
             }
             Divider()
-            Button("バッファを削除") {
+            Button("バッファを閉じる") {
                 if let id = store.selectedID { store.deleteBuffer(id) }
             }
-            .keyboardShortcut(.delete, modifiers: .command)
+            .keyboardShortcut("w", modifiers: .command)
         }
     }
 }
