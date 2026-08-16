@@ -17,7 +17,7 @@ enum MarkdownRenderer {
         if let rewritten = rewriter.visit(document) as? Document {
             document = rewritten
         }
-        return HTMLFormatter.format(document)
+        return SafeHTMLFormatter.format(document)
     }
 
     static func html(from markdown: String) -> String {
@@ -27,6 +27,7 @@ enum MarkdownRenderer {
         <html>
         <head>
         <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:;">
         <style>\(css)</style>
         <style>
         @media (prefers-color-scheme: light) { \(themeLight) }

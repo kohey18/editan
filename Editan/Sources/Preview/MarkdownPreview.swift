@@ -66,11 +66,19 @@ struct MarkdownPreview: NSViewRepresentable {
             decidePolicyFor navigationAction: WKNavigationAction,
             decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
         ) {
-            if navigationAction.navigationType == .linkActivated, let url = navigationAction.request.url {
-                NSWorkspace.shared.open(url)
+            if navigationAction.navigationType == .linkActivated {
+                // 外部で開くのは http/https/mailto のみ(file: やカスタムスキームは拒否)
+                if let url = navigationAction.request.url,
+                   let scheme = url.scheme?.lowercased(),
+                   ["http", "https", "mailto"].contains(scheme) {
+                    NSWorkspace.shared.open(url)
+                }
                 decisionHandler(.cancel)
-            } else {
+            } else if navigationAction.request.url?.absoluteString == "about:blank" {
+                // loadHTMLString(baseURL: nil) の初回ロードのみ許可
                 decisionHandler(.allow)
+            } else {
+                decisionHandler(.cancel)
             }
         }
     }
