@@ -32,6 +32,7 @@ Editan/Sources/
 │   └── MarkdownHighlighter.swift # swift-markdown の SourceRange → NSRange 変換(SourceMap)+ 全文ハイライト
 ├── Preview/
 │   ├── MarkdownRenderer.swift # MD → HTML(SoftBreak → <br> 書き換え済み)。body() はリッチコピーにも使う
+│   ├── SafeHTMLFormatter.swift # エスケープ完備の HTML 生成(下記設計原則 6 参照)
 │   └── MarkdownPreview.swift  # WKWebView。250ms デバウンス、スクロール位置復元、リンクはブラウザへ
 ├── Transforms/
 │   ├── ClaudeCLI.swift       # claude -p のサブプロセス実行。パスは既知候補 + zsh -lc で解決しキャッシュ
@@ -64,6 +65,10 @@ NSTextView を取得して操作。エディタ→モデルは NSTextViewDelegat
    insertNewline のカスタム処理をすべてスキップする。エディタ挙動を触ったら必ず日本語入力で確認を依頼
 5. エディタのテキスト置換は Undo に載せる: `shouldChangeText(in:)` → `textStorage.replaceCharacters`
    → `didChangeText()` の 3 点セット(EditorAccess.replaceAllText 参照)
+6. **MD → HTML は必ず SafeHTMLFormatter を通す**。swift-markdown 標準の `HTMLFormatter` は
+   テキスト・コード・属性を一切エスケープせず生 HTML も素通しするため、信頼できない .md を
+   開くとプレビューの WKWebView で任意 JS が動く(使用禁止)。プレビューの CSP メタタグと
+   MarkdownPreview の scheme 許可リスト(http/https/mailto)も同じ防御の一部
 
 ## ハマりどころ(過去に踏んだもの)
 
