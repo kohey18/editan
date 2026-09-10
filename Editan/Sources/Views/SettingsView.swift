@@ -15,13 +15,28 @@ struct SettingsView: View {
 }
 
 struct NotionSettingsView: View {
-    @AppStorage("notionToken") private var token = ""
+    @State private var token = ""
+    @State private var credentialMessage = ""
+    @State private var credentialLoaded = false
     @AppStorage("notionParentPageID") private var parentPageID = ""
 
     var body: some View {
         Form {
             Section("Notion 連携") {
                 SecureField("Integration Token", text: $token)
+                    .disabled(!credentialLoaded)
+                Button("トークンを Keychain に保存") {
+                    do {
+                        try NotionCredentials.save(token)
+                        credentialMessage = token.isEmpty ? "トークンを削除しました。" : "Keychain に保存しました。"
+                    } catch {
+                        credentialMessage = error.localizedDescription
+                    }
+                }
+                .disabled(!credentialLoaded)
+                if !credentialMessage.isEmpty {
+                    Text(credentialMessage).font(.caption)
+                }
                 TextField("親ページ ID", text: $parentPageID)
             }
             Section {
@@ -37,6 +52,14 @@ struct NotionSettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(height: 320)
+        .frame(height: 400)
+        .onAppear {
+            do {
+                token = try NotionCredentials.load()
+                credentialLoaded = true
+            } catch {
+                credentialMessage = error.localizedDescription
+            }
+        }
     }
 }

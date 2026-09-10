@@ -11,7 +11,7 @@ struct TransformSettingsView: View {
                     Text("Sonnet(標準)").tag("sonnet")
                     Text("Opus(高品質)").tag("opus")
                 }
-                Text("変換は Claude Code CLI(claude -p)経由で実行され、Claude サブスクリプションの範囲内で利用されます。")
+                Text("変換対象の文章は Claude Code CLI 経由で送信されます。認証・利用枠・課金は CLI の設定に従います。ツール実行と会話履歴の保存は無効です。")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

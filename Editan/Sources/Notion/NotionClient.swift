@@ -17,14 +17,15 @@ enum NotionError: LocalizedError {
 enum NotionClient {
     static var isConfigured: Bool {
         let defaults = UserDefaults.standard
-        return !(defaults.string(forKey: "notionToken") ?? "").isEmpty
+        return !((try? NotionCredentials.load()) ?? "").isEmpty
             && !(defaults.string(forKey: "notionParentPageID") ?? "").isEmpty
     }
 
     /// 親ページ配下に新規ページを作成し、ページ URL を返す。
     static func createPage(title: String, markdown: String) async throws -> URL? {
         let defaults = UserDefaults.standard
-        guard let token = defaults.string(forKey: "notionToken"), !token.isEmpty,
+        let token = try NotionCredentials.load()
+        guard !token.isEmpty,
               let parent = defaults.string(forKey: "notionParentPageID"), !parent.isEmpty else {
             throw NotionError.notConfigured
         }

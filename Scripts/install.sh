@@ -1,11 +1,11 @@
 #!/bin/zsh
 # Release ビルドして /Applications にインストールする
-set -e
+set -euo pipefail
 cd "$(dirname "$0")/.."
 
 xcodegen generate
 xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Release \
-  -derivedDataPath build/DerivedData build | grep -E "error:|warning: .*deprecated|BUILD" || true
+  -derivedDataPath build/DerivedData build
 
 APP=build/DerivedData/Build/Products/Release/Editan.app
 if [ ! -d "$APP" ]; then

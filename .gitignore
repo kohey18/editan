@@ -13,3 +13,14 @@ xcuserdata/
 
 # macOS
 .DS_Store
+
+# Local output and credentials
+build/
+.env
+.env.*
+!.env.example
+*.p12
+*.p8
+*.key
+*.pem
+node_modules/

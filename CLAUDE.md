@@ -1,6 +1,6 @@
 # Editan
 
-macOS 用ステージングエディタ(SwiftUI + AppKit、XcodeGen 管理、Swift 5 言語モード)。
+macOS 用ステージングエディタ(SwiftUI + AppKit、XcodeGen 管理、Swift 5 言語モード、Xcode 26 以降)。
 コンセプトは「書く → 変換する → コピーして他アプリに貼る」。貼り付け先は Claude Code / Gmail / Slack / Notion。
 クラウド同期なし・Mac 専用・個人利用(ad-hoc 署名、App Store 非対応で OK)。
 
@@ -15,7 +15,7 @@ xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Debug -derive
 - **ソースファイルを追加・削除・移動したら必ず `xcodegen generate` を再実行**(忘れるとビルドに含まれない)
 - 動作確認の再起動: `pkill -x Editan; open build/DerivedData/Build/Products/Debug/Editan.app`
 - ビルド確認は `xcodebuild ... 2>&1 | grep -E "error:|BUILD"` で十分
-- テストターゲットは未整備。変更後は必ずビルド + アプリ起動確認まで行い、ユーザーに UI 動作確認を依頼する
+- `EditanSecurityTests` に HTML 無害化・認証情報移行・CLI 制限の回帰テストがある。`xcodebuild -project Editan.xcodeproj -scheme EditanSecurityTests -destination 'platform=macOS' test` で実行。変更後はビルド + アプリ起動確認を行い、UI に関係する変更はユーザーにも確認を依頼する
 - 機能追加やバグ修正が動いたら、フェーズ・機能単位でコミットして push する(このリポジトリの運用)
 
 ## アーキテクチャ
@@ -53,14 +53,14 @@ Editan/Sources/
 NSTextView を取得して操作。エディタ→モデルは NSTextViewDelegate.textDidChange → Binding 経由。
 
 永続化: スクラッチは `~/Library/Application Support/Editan/Buffers/<uuid>.md` + `index.json`
-(500ms デバウンス自動保存)。変換テンプレートは同 `templates.json`。Notion トークンは UserDefaults。
+(500ms デバウンス自動保存)。変換テンプレートは同 `templates.json`。Notion トークンは macOS Keychain。旧 UserDefaults のトークンは Notion 機能利用時に移行し、成功後のみ削除する。
 
 ## 破ってはいけない設計原則
 
 1. **⌘C は常にプレーンテキスト**(PlainTextView の copy/cut オーバーライド)。ペーストボードに
    RTF/HTML を書いてよいのは明示的な「〜としてコピー」コマンドのみ
 2. スマート引用符・自動修正の類は常にオフ
-3. LLM は API 課金ではなく CLI(`claude -p`)のサブプロセス。サブスク内で使うための要件
+3. LLM は CLI(`claude -p`)のサブプロセス。認証・利用枠・課金は CLI 設定に従う。ツール・MCP・フック・会話履歴保存の制限を維持する
 4. **IME(日本語入力)を壊さない**: `hasMarkedText()` 中は textView.string の差し替え・属性適用・
    insertNewline のカスタム処理をすべてスキップする。エディタ挙動を触ったら必ず日本語入力で確認を依頼
 5. エディタのテキスト置換は Undo に載せる: `shouldChangeText(in:)` → `textStorage.replaceCharacters`
@@ -95,4 +95,11 @@ NSTextView を取得して操作。エディタ→モデルは NSTextViewDelegat
 
 - プレビューのスクロール同期 / バッファのドラッグ並べ替え・ピン留め・検索
 - 変換結果の diff 表示 / GPT(codex exec)プロバイダ対応
-- Notion トークンの Keychain 移行 / 配布するなら Developer ID 署名 + 公証
+- 配布するなら Developer ID 署名 + 公証
+
+## 公開用ドキュメントと LP
+
+- README.md / README.ja.md、docs/index.html / docs/ja/index.html の説明を揃える。未実装の機能・公証済み配布・無条件の追加課金なしを宣伝しない。
+- `python3 Scripts/build_site.py` でリンクと公開ファイルを検証し、build/pages に静的 LP を生成する。docs 全体をそのまま公開しない。
+- `.github/workflows/pages.yml` は public な main のみ公開。リポジトリの公開範囲変更はコードのビルドと別の判断。
+- セキュリティ上の境界は SECURITY.md、開発手順は CONTRIBUTING.md。
