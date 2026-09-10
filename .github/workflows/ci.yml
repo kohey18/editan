@@ -1,0 +1,40 @@
+name: Build and security checks
+on:
+  push:
+    branches: [main, prepare-public-release]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  macos:
+    runs-on: macos-26
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install build and scan tools
+        run: brew install xcodegen gitleaks
+      - name: Scan Git history for credentials
+        run: gitleaks git . --log-opts='--all' --redact
+      - name: Scan commit metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          git log --all --format=fuller --no-patch | gitleaks stdin --redact
+      - name: Validate website and scripts
+        run: |
+          python3 Scripts/build_site.py
+          node --check docs/assets/site.js
+          zsh -n Scripts/install.sh
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Build app
+        run: xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Debug -destination 'platform=macOS' -derivedDataPath build/DerivedData build
+      - name: Run security regression tests
+        run: xcodebuild -project Editan.xcodeproj -scheme EditanSecurityTests -destination 'platform=macOS' -derivedDataPath build/DerivedData test
