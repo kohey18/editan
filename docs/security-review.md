@@ -4,7 +4,7 @@
 
 No credentials were detected in the reviewed Git history. Several application and release-preparation issues were fixed on the public-release preparation branch. This is a bounded source/history review, not a security certification or a claim that the application has no vulnerabilities.
 
-**Public visibility has not been changed.** The owner still needs to resolve the author-email choice and review the completed changes. The requested generated artwork is pending model approval. Keep this report separate from the landing-page deployment artifact.
+**Public visibility has not been changed.** The owner approved retaining the existing author-email history. The requested generated artwork will use the Images API with GPT Image 2.5; generation is pending a configured API key. Keep this report separate from the landing-page deployment artifact.
 
 ## Scope and evidence
 
@@ -34,9 +34,11 @@ Local scan and build logs live in ignored `build/public-audit/`. They are not in
 | Future leakage | Build output and credentials lacked explicit repository ignore rules | Add ignored build, environment, signing-key and certificate patterns. Add history scanning to CI. |
 | Website publication | Publishing all of `docs/` would expose unrelated notes | Stage a fixed allowlist. Deploy only public `main`, using scoped permissions and pinned action commits. |
 
-## Owner decision before visibility change
+## Owner decisions before visibility change
 
-Existing Git author/committer metadata contains a personal Gmail address. It is not an authentication secret, but making the repository public makes the historical address readable. Choose to retain the history or explicitly authorize rewriting it to a GitHub noreply address. No existing commits have been rewritten. A rewrite changes commit IDs and requires coordination with any other checkout/branch.
+On 2026-09-10, the owner explicitly approved retaining the existing Git history, including the personal Gmail address in author/committer metadata. No existing commits have been rewritten. New preparation commits use the owner's GitHub noreply address.
+
+The owner also requested API-based image generation. The planned model is `gpt-image-2.5-sunburst`; generation requires a locally configured API key. Repository visibility remains private while preparation is completed.
 
 The repository remains MIT-licensed. Existing AI-assisted-development instructions and configuration will also become visible as source files. Confirm the intended public surface after any concurrent work is merged.
 
@@ -50,7 +52,7 @@ The repository remains MIT-licensed. Existing AI-assisted-development instructio
 - Browser connection discovery returned no available browser. Responsive/interactive visual QA and native settings/Keychain end-to-end behavior are not claimed as verified.
 - Real Claude transformations and Notion exports were not invoked: this review did not send user drafts, spend provider quota, or create Notion pages.
 
-The GitHub Actions workflow provides the normal app build and Xcode test checks. Its result must be assessed separately; adding a workflow is not evidence that it has passed.
+The normal Xcode app build and all 11 Xcode tests passed in [GitHub Actions run 34444768208](https://github.com/kohey18/editan/actions/runs/34444768208) for commit `c79b99d`. This verifies the app-bundle build independently of the local Xcode environment issue.
 
 ## Remaining boundaries
 
