@@ -9,7 +9,7 @@ Web やメール、ほかのアプリでコピーした文章を Editan にペ�
 
 下書きして、必要なら文章を整えて、貼り付け先に合う書式でコピー。Editan のアカウントやクラウド同期はありません。編集・プレビューはオフラインで動作し、任意の Claude／Notion 連携は操作したときに文章を送信します。
 
-> **開発初期のソフトウェアです。** 現在はソースからビルドして使います。公証済みダウンロードや App Store 版はまだありません。アプリの UI は日本語です。
+> **開発初期のソフトウェアです。** ソースからのビルド、または別リポジトリの[配布版](https://github.com/kohey18/editan-releases/releases)を利用できます。App Store 版はまだありません。アプリの UI は日本語です。
 
 ## Editan でできること
 
@@ -32,6 +32,8 @@ Web やメール、ほかのアプリでコピーした文章を Editan にペ�
 Slack 用コピーはメッセージを送信しません。Notion 送信は現在のバッファを API 経由で送ります。コピー後の表示は貼り付け先のアプリに依存します。
 
 ## はじめる
+
+ビルドせずに使う場合は [GitHub Releases](https://github.com/kohey18/editan-releases/releases) の DMG を開き、Editan を Applications にコピーしてください。以下は現在のソースをビルドする手順です。
 
 **必要なもの：** macOS 14 以降、フル版 **Xcode 26 以降**とそのコマンドラインツール、[Homebrew](https://brew.sh/)。固定した Markdown 依存ライブラリは Swift tools 6.2 を使用します。Editan のコードは Swift 5 言語モードです。
 
@@ -111,7 +113,7 @@ xcodebuild -project Editan.xcodeproj -scheme EditanSecurityTests \
 
 [開発ガイド](CONTRIBUTING.md) · [Web サイトの更新](docs/website.md) · [依存ライブラリのライセンス](THIRD_PARTY_NOTICES.md)
 
-今後の候補はプレビューのスクロール同期、下書き検索・固定・並べ替え、変換差分、LLM プロバイダ追加、英語 UI、署名・公証付き配布です。これらは未実装のアイデアです。
+今後の候補はプレビューのスクロール同期、下書き検索・固定・並べ替え、変換差分、LLM プロバイダ追加、英語 UI、配布版の幅広い環境での動作確認です。これらは未実装のアイデアです。
 
 バグ報告、ドキュメント、日本語 IME での動作確認、小さな改善を歓迎します。[Issue](https://github.com/kohey18/editan/issues) または Pull Request で参加してください。
 

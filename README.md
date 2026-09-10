@@ -16,7 +16,7 @@ Copy text from a web page, an email, or another app and paste it into Editan. **
 
 Draft in a scratch buffer, refine the words, copy in the right format, and get back to what you were doing. No Editan account or cloud sync. Editing and preview work offline; optional Claude and Notion integrations send text only when you run them.
 
-> **Early-stage software.** Build from source for now; there is no notarized download or App Store release. The app currently uses Japanese UI labels. English and Japanese documentation are available.
+> **Early-stage software.** Build from source, or use the separately hosted [prebuilt downloads](https://github.com/kohey18/editan-releases/releases). There is no App Store release. The app currently uses Japanese UI labels. English and Japanese documentation are available.
 
 ## Why Editan?
 
@@ -39,6 +39,8 @@ Draft in a scratch buffer, refine the words, copy in the right format, and get b
 Slack copy puts text on your clipboard; it does not post a message. Notion export sends the current buffer through the Notion API. How rich text and Slack-style text appear depends on the destination app.
 
 ## Getting started
+
+For a prebuilt app, see [GitHub Releases](https://github.com/kohey18/editan-releases/releases). Open the DMG and drag Editan to Applications. The following instructions build the current source instead.
 
 **Requirements:** macOS 14+, full **Xcode 26+** (including its command-line tools), and [Homebrew](https://brew.sh/). The pinned Markdown dependencies use Swift tools 6.2; Editan's source uses Swift 5 language mode.
 
@@ -146,7 +148,7 @@ Ideas under consideration, not promises of shipped features:
 - Buffer search, pinning, and drag reordering
 - A diff view for transform results
 - More LLM providers and English app localization
-- Signed and notarized distribution
+- Broader installation testing for downloadable releases
 
 Have a use case or a small improvement? [Open an issue](https://github.com/kohey18/editan/issues) or [contribute a pull request](CONTRIBUTING.md). Bug reports, documentation, and Japanese IME testing all help.
 

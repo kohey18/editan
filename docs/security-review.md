@@ -66,4 +66,4 @@ The normal Xcode app build and all 11 Xcode tests passed in [GitHub Actions run 
 - Notion export can partially succeed before later block-upload failure; retrying may duplicate a page.
 - Existing Swift 6 actor-isolation warnings in the editor remain warnings under the app's Swift 5 language mode.
 
-The separately added `Scripts/release.sh` and `docs/distribution.md` appeared during this session as concurrent work. They are preserved but are outside this change set and this audit's completed verification scope. Review them before merging them into a public source release.
+Concurrent commits `025da98` and `bf08e0d` added `Scripts/release.sh` and `docs/distribution.md` to this same preparation branch. The public v0.1.0 download in `kohey18/editan-releases` was confirmed through the GitHub API. The release script was read and syntax-checked, and history scanning includes these commits; signing/notarization and the distributed binary were verified by the separate distribution task, not independently repeated in this review. The distribution notes contain the public signing identity and Team ID; these are identifiers, not private signing keys.
