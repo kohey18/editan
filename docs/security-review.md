@@ -4,7 +4,7 @@
 
 No credentials were detected in the reviewed Git history. Several application and release-preparation issues were fixed on the public-release preparation branch. This is a bounded source/history review, not a security certification or a claim that the application has no vulnerabilities.
 
-**Public visibility has not been changed.** The owner approved retaining the existing author-email history. The requested generated artwork will use the Images API with GPT Image 2.5; generation is pending a configured API key. Keep this report separate from the landing-page deployment artifact.
+**Public visibility has not been changed.** The owner approved retaining the existing author-email history. The artwork was generated and edited through the Images API with GPT Image 2.5 Sunburst; the key stayed in local configuration. Keep this report separate from the landing-page deployment artifact.
 
 ## Scope and evidence
 
@@ -38,7 +38,7 @@ Local scan and build logs live in ignored `build/public-audit/`. They are not in
 
 On 2026-09-10, the owner explicitly approved retaining the existing Git history, including the personal Gmail address in author/committer metadata. No existing commits have been rewritten. New preparation commits use the owner's GitHub noreply address.
 
-The owner also requested API-based image generation. The planned model is `gpt-image-2.5-sunburst`; generation requires a locally configured API key. Repository visibility remains private while preparation is completed.
+The owner also requested API-based image generation. Generation and edits used `gpt-image-2.5-sunburst`; the final asset and prompt record are committed. No API credentials were added to the repository. Repository visibility remains private pending the owner’s publication decision.
 
 The repository remains MIT-licensed. Existing AI-assisted-development instructions and configuration will also become visible as source files. Confirm the intended public surface after any concurrent work is merged.
 
@@ -48,6 +48,7 @@ The repository remains MIT-licensed. Existing AI-assisted-development instructio
 - **11 security regression tests passed**: raw HTML/code escaping, unsafe schemes, preview CSP, four credential migration paths, restricted CLI arguments, large stderr, and subprocess failure propagation. Migration tests use injected storage operations and disposable preferences; they do not exercise the owner's actual Keychain token.
 - XcodeGen project generation succeeded with the standalone `EditanSecurityTests` target. A temporary ad-hoc app bundle containing the SwiftPM-built executable launched successfully and was then closed; the installed app was not replaced.
 - The local Xcode 26.5 app build stalled before compilation at `CreateBuildDescription` / clang tool information discovery; that run was stopped. The SwiftPM validation is not a substitute for a successful Xcode app-bundle build.
+- A focused native AppKit check using a disposable, named pasteboard verified that pasted sample text loses its source font size and red color under the editor’s plain-text configuration. The system clipboard was not replaced.
 - The static-site staging/link/metadata checks, JavaScript syntax check, shell syntax check, and `git diff --check` passed.
 - Browser connection discovery returned no available browser. Responsive/interactive visual QA and native settings/Keychain end-to-end behavior are not claimed as verified.
 - Real Claude transformations and Notion exports were not invoked: this review did not send user drafts, spend provider quota, or create Notion pages.

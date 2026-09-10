@@ -24,3 +24,6 @@ build/
 *.key
 *.pem
 node_modules/
+
+# Local image-generation originals and iterations
+output/imagegen/

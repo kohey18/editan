@@ -41,6 +41,10 @@ See [GitHub's custom Pages workflow documentation](https://docs.github.com/en/pa
 
 ## Artwork
 
-The owner requested API-based generation using GPT Image 2.5. The selected model is `gpt-image-2.5-sunburst`, documented in the [official model reference](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst). Generation is pending a locally configured API key; do not put that key in Git or the site.
+`docs/assets/social.png` is the final 1536 × 1024 image generated and edited through the OpenAI Images API with `gpt-image-2.5-sunburst` on 2026-09-10. It appears in the landing page and in Open Graph/X metadata for both languages. The complete [prompt and edit instructions](artwork.md) are recorded for maintenance.
 
-The generation prompt follows the icon's indigo/cyan palette above. Once the card is generated and reviewed, save it to `docs/assets/social.png`, record the prompt and generation method, and add absolute Open Graph/X image metadata to both language pages. The current site uses the project's actual app imagery until that asset is ready.
+The image follows the icon's indigo/cyan palette and the positioning “Paste it here. Make it yours.” Actual app UI is shown separately using the repository's screenshot and demo. The API key was read from local configuration at runtime and is not part of the repository or site. Local image-generation iterations under `output/imagegen/` are ignored; the final website asset is committed.
+
+## Plain-text paste positioning
+
+The headline and first feature section foreground incoming plain-text paste. `PlainTextEditor.makeNSView` sets `isRichText = false` and `importsGraphics = false`; standard copy/cut also emits plain text. The comparison uses a styled source and a plain-text result to illustrate that incoming font/color attributes are discarded. It is an explanatory example, not an embedded app. Markdown highlighting is applied by Editan afterward.

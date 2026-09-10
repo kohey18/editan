@@ -2,7 +2,7 @@
   <img src="docs/icon.png" width="96" height="96" alt="Editan — a little paper companion">
 </p>
 <h1 align="center">Editan</h1>
-<p align="center"><strong>Write here. Paste anywhere.</strong><br>A little space on your Mac for text headed somewhere else.</p>
+<p align="center"><strong>Paste it here. Make it yours.</strong><br>A plain-text workspace between your everyday apps.</p>
 <p align="center">
   <a href="#getting-started"><img src="https://img.shields.io/badge/macOS-14%2B-264536?logo=apple&amp;logoColor=white" alt="macOS 14 or later"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-264536" alt="MIT License"></a>
@@ -12,7 +12,7 @@
 
 ![Editan drafting sample release notes with Markdown syntax highlighting and a live preview](docs/demo.gif)
 
-Your next AI prompt. A carefully worded email. A team update that needs to survive a paste into Slack. **Editan is a native macOS staging editor for all the text you write for other apps.**
+Copy text from a web page, an email, or another app and paste it into Editan. **It arrives as plain text, without the source’s fonts, colors, or rich-text styling.** Edit the words in a consistent workspace, then copy in the format your next destination needs.
 
 Draft in a scratch buffer, refine the words, copy in the right format, and get back to what you were doing. No Editan account or cloud sync. Editing and preview work offline; optional Claude and Notion integrations send text only when you run them.
 
@@ -20,6 +20,7 @@ Draft in a scratch buffer, refine the words, copy in the right format, and get b
 
 ## Why Editan?
 
+- **Plain text on the way in.** Normal **⌘V** pastes text in the editor’s own style. Gather text from different apps and start editing immediately. Markdown syntax highlighting is Editan’s own presentation.
 - **A scratchpad without the housekeeping.** Scratch buffers save automatically as Markdown files. Open and edit existing text files, too.
 - **A clipboard you can predict.** Standard **⌘C always copies plain text**. Slack-style text and rich text each have their own explicit command.
 - **Markdown with a view.** Syntax highlighting, a split preview, a formatter, list continuation, and copyable code blocks.
@@ -50,7 +51,7 @@ cd editan
 
 The script builds Release and installs `/Applications/Editan.app`, replacing an existing copy. Open Editan from Applications, or press **⌥⌘E** once it is running.
 
-1. Press **⌘N** for a scratch buffer and write something.
+1. Press **⌘N** for a scratch buffer. Paste text with **⌘V**, or start writing.
 2. Toggle the preview with **⇧⌘P** or format Markdown with **⇧⌘F**.
 3. Copy with **⌘C**, **⇧⌘C**, or **⌥⌘C**, then paste into the destination.
 
@@ -92,6 +93,7 @@ The token is kept in macOS Keychain. Legacy tokens in preferences migrate when t
 | Open file | ⌘O | Format Markdown | ⇧⌘F |
 | Save / Save As | ⌘S / ⇧⌘S | Toggle preview | ⇧⌘P |
 | Find | ⌘F | Insert snippet | ⌃⌘1–9 |
+| Paste as plain text | ⌘V | | |
 | Settings | ⌘, | Run transform | ⌥⌘1–9 |
 
 ## Your data

@@ -9,10 +9,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / 'docs'
 OUTPUT = ROOT / 'build' / 'pages'
 FILES = ['index.html', 'ja/index.html', 'icon.png', 'demo.gif',
-         'assets/editor.png', 'assets/site.css', 'assets/site.js', '.nojekyll']
-# Generated artwork is optional until a model has been approved and an asset reviewed.
-if (SOURCE / 'assets' / 'social.png').is_file():
-    FILES.append('assets/social.png')
+         'assets/editor.png', 'assets/social.png', 'assets/site.css', 'assets/site.js', '.nojekyll']
 
 class Page(HTMLParser):
     def __init__(self, path):
