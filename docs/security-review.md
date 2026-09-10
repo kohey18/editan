@@ -24,7 +24,7 @@ Local scan and build logs live in ignored `build/public-audit/`. They are not in
 | Area | Finding | Resolution |
 | --- | --- | --- |
 | Credentials | Notion token stored in UserDefaults | macOS Keychain storage with explicit save/delete and legacy migration. A failed Keychain read/write does not delete the old preference. |
-| Agent capabilities | Text transforms inherited Claude tool/configuration capabilities | Disable built-in/MCP tools, hooks, slash commands, normal settings sources, and session persistence. Use a text-only system prompt and direct process arguments. |
+| Agent capabilities | Text transforms inherited Claude tool/configuration capabilities | Disable built-in/MCP tools, hooks, slash commands, normal settings sources, and session persistence. Use safe mode to skip ordinary CLAUDE.md/memory/plugins, a text-only system prompt, and direct process arguments. |
 | Process availability | Sequential stdout/stderr reads could block on a full error pipe | Drain both concurrently; tested with 128 KiB of stderr. |
 | Install correctness | Failed `xcodebuild` was suppressed and could install a stale build | `set -euo pipefail`; do not suppress build failure. |
 | Preview | Existing formatter/CSP/navigation restrictions already block active HTML and remote resources | Preserve the defenses and add regression coverage. Preview external images were not a new network leak. Exported HTML has a separate receiving-app policy. |

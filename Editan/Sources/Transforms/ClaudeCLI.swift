@@ -30,7 +30,7 @@ enum ClaudeCLI {
 
     static func transformArguments(instruction: String, model: String) -> [String] {
         [
-            "-p", instruction, "--model", model, "--output-format", "text",
+            "-p", instruction, "--model", model, "--output-format", "text", "--safe-mode",
             "--tools", "", "--disallowedTools", "mcp__*",
             "--strict-mcp-config", "--mcp-config", "{\"mcpServers\":{}}",
             "--disable-slash-commands", "--no-session-persistence",

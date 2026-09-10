@@ -34,6 +34,7 @@ The app passes text through stdin and supplies arguments directly to `Process`; 
 
 Invocation explicitly uses:
 
+- `--safe-mode` to skip ordinary CLAUDE.md, memory, plugin, and other customization loading while retaining authentication
 - `--tools ""` and `--disallowedTools "mcp__*"`
 - `--strict-mcp-config` with an empty `mcpServers` configuration
 - `--disable-slash-commands` and `--settings '{"disableAllHooks":true}'`

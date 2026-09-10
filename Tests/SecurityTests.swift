@@ -102,6 +102,7 @@ final class SecurityTests: XCTestCase {
         XCTAssertEqual(value(after: "--setting-sources", in: args), "")
         XCTAssertEqual(value(after: "--settings", in: args), "{\"disableAllHooks\":true}")
         XCTAssertTrue(args.contains("--strict-mcp-config"))
+        XCTAssertTrue(args.contains("--safe-mode"))
         XCTAssertTrue(args.contains("--no-session-persistence"))
         XCTAssertFalse(args.contains("--dangerously-skip-permissions"))
     }
