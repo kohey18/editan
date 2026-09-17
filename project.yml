@@ -7,8 +7,43 @@ options:
 packages:
   swift-markdown:
     url: https://github.com/swiftlang/swift-markdown.git
-    from: 0.4.0
+    exactVersion: 0.8.0
+  swift-cmark:
+    url: https://github.com/swiftlang/swift-cmark.git
+    exactVersion: 0.8.0
+schemes:
+  Editan:
+    build:
+      targets:
+        Editan: all
+    run:
+      config: Debug
+  EditanSecurityTests:
+    build:
+      targets:
+        EditanSecurityTests: [test]
+    test:
+      config: Debug
+      targets:
+        - EditanSecurityTests
 targets:
+  EditanSecurityTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - Tests
+      - Editan/Sources/Preview/SafeHTMLFormatter.swift
+      - Editan/Sources/Preview/MarkdownRenderer.swift
+      - Editan/Sources/Notion/NotionCredentials.swift
+      - Editan/Sources/Transforms/ClaudeCLI.swift
+    dependencies:
+      - package: swift-markdown
+        product: Markdown
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "5.0"
+        CODE_SIGN_IDENTITY: "-"
   Editan:
     type: application
     platform: macOS

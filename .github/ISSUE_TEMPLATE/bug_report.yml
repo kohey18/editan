@@ -1,0 +1,24 @@
+name: Bug report / 不具合
+description: Report a reproducible problem with Editan.
+body:
+  - type: markdown
+    attributes:
+      value: 'English and Japanese are welcome. For vulnerabilities, see SECURITY.md. Do not include credentials or private drafts.'
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened? / 何が起きましたか？
+      description: Include reproduction steps, expected behavior, and a small synthetic example.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: macOS version and Editan commit / 環境
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context / 補足
+      description: Redact screenshots and logs before attaching them.

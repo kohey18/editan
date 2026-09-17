@@ -1,175 +1,157 @@
 <p align="center">
-  <img src="docs/icon.png" width="128" alt="Editan icon">
+  <img src="docs/icon.png" width="96" height="96" alt="Editan — a little paper companion">
 </p>
-
 <h1 align="center">Editan</h1>
-
+<p align="center"><strong>Paste it here. Make it yours.</strong><br>A plain-text workspace between your everyday apps.</p>
 <p align="center">
-  <b>A staging editor for macOS: write → transform → copy → paste anywhere.</b>
+  <a href="#getting-started"><img src="https://img.shields.io/badge/macOS-14%2B-264536?logo=apple&amp;logoColor=white" alt="macOS 14 or later"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-264536" alt="MIT License"></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/contributions-welcome-264536" alt="Contributions welcome"></a>
 </p>
+<p align="center"><a href="https://kohey18.github.io/editan/">Website</a> · <a href="#getting-started">Get started</a> · <a href="#keyboard-shortcuts">Shortcuts</a> · <a href="README.ja.md">日本語</a></p>
 
-<p align="center">
-  <a href="#installation"><img src="https://img.shields.io/badge/macOS-14%2B-blue?logo=apple" alt="macOS 14+"></a>
-  <img src="https://img.shields.io/badge/Swift-5-F05138?logo=swift&logoColor=white" alt="Swift 5">
-  <img src="https://img.shields.io/badge/UI-SwiftUI%20%2B%20AppKit-purple" alt="SwiftUI + AppKit">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
-  <a href="#contributing"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs welcome"></a>
-</p>
+![Editan drafting sample release notes with Markdown syntax highlighting and a live preview](docs/demo.gif)
 
----
+Copy text from a web page, an email, or another app and paste it into Editan. **It arrives as plain text, without the source’s fonts, colors, or rich-text styling.** Edit the words in a consistent workspace, then copy in the format your next destination needs.
 
-Editan is the place to write text that ends up in **other apps** — prompts for Claude Code, email bodies for Gmail, Markdown for Slack or Notion. Draft it here, transform it with an LLM if you want, then copy it in exactly the format the destination expects.
+Draft in a scratch buffer, refine the words, copy in the right format, and get back to what you were doing. No Editan account or cloud sync. Editing and preview work offline; optional Claude and Notion integrations send text only when you run them.
 
-No cloud sync. No telemetry. No account. Everything stays on your Mac.
-
-![Editan demo: typing Markdown release notes in the editor while the preview pane renders them live with per-language code highlighting](docs/demo.gif)
+> **Early-stage software.** Build from source, or use the separately hosted [prebuilt downloads](https://github.com/kohey18/editan-releases/releases). There is no App Store release. The app currently uses Japanese UI labels. English and Japanese documentation are available.
 
 ## Why Editan?
 
-Most text you write on a computer is destined for a paste. But every destination wants something different: Slack mangles Markdown, Gmail wants rich text, Claude Code wants plain prompts, and Notion wants blocks. Editan is built around that one workflow:
+- **Plain text on the way in.** Normal **⌘V** pastes text in the editor’s own style. Gather text from different apps and start editing immediately. Markdown syntax highlighting is Editan’s own presentation.
+- **A scratchpad without the housekeeping.** Scratch buffers save automatically as Markdown files. Open and edit existing text files, too.
+- **A clipboard you can predict.** Standard **⌘C always copies plain text**. Slack-style text and rich text each have their own explicit command.
+- **Markdown with a view.** Syntax highlighting, a split preview, a formatter, list continuation, and copyable code blocks.
+- **Help with the words, when you want it.** Optional Claude Code transforms for polite Japanese, a casual tone, proofreading, summaries, or your own instructions. Review before replacing.
+- **Made for your Mac.** SwiftUI + AppKit, a menu bar companion, a global hotkey, reusable snippets, and editing that respects Japanese IME composition.
 
-1. **Write** in a scratch buffer — no save dialogs, everything auto-persists
-2. **Transform** with an LLM if needed — politeness rewrite, proofread, summarize, or your own template
-3. **Copy** in the right flavor — plain, Slack mrkdwn, rich text, or straight into Notion
-4. **Paste** and move on
+## One draft, several destinations
 
-## Features
+| Where it is going | What Editan does | Shortcut |
+| --- | --- | --- |
+| An AI prompt, a terminal, anywhere | Copy plain text without hidden formatting | ⌘C |
+| Slack | Convert to Slack-style text and copy it | ⇧⌘C |
+| Gmail, Pages, other rich-text apps | Copy HTML with a plain-text fallback | ⌥⌘C |
+| Notion | Create a page under your configured parent page | ⇧⌘N |
 
-### Editor
+Slack copy puts text on your clipboard; it does not post a message. Notion export sends the current buffer through the Notion API. How rich text and Slack-style text appear depends on the destination app.
 
-- **⌘C always copies plain text** — rich text never sneaks into your clipboard
-- Scratch-buffer based: buffers auto-save as Markdown files, no "Untitled.txt" dialogs; regular `.md` files can be opened and edited too
-- Markdown syntax highlighting, list/quote continuation on newline, and a formatter (⇧⌘F)
-- Japanese IME-safe: highlighting and newline handling never interfere with text composition
-- Smart quotes and autocorrect are always off
+## Getting started
 
-### Preview
+For a prebuilt app, see [GitHub Releases](https://github.com/kohey18/editan-releases/releases). Open the DMG and drag Editan to Applications. The following instructions build the current source instead.
 
-- Split-pane Markdown preview with per-language code highlighting (highlight.js bundled, works offline)
-- Copy button on every code block
-- Links open in your default browser
-
-### Copy & export
-
-- **⇧⌘C** — copy for Slack (mrkdwn-style: bold/italic/strikethrough, lists, quotes)
-- **⌥⌘C** — copy as rich text (pastes formatted into Gmail, Pages, …)
-- **⇧⌘N** — send the current buffer to Notion as a new page (rich text annotations preserved)
-
-### LLM transforms
-
-- Rewrite selections or whole buffers: keigo (polite Japanese), casual, proofread, summarize — or define your own templates
-- Runs via the **Claude Code CLI (`claude -p`) as a subprocess** — works within your existing Claude subscription, no API key, no extra billing
-- Review the result in a sheet, then replace the text or copy it
-
-### Always within reach
-
-- Global hotkey **⌥⌘E** and a menu bar extra bring Editan up from anywhere
-- Registers as a Markdown/plain-text editor, so files open from Finder too
-
-## Keyboard shortcuts
-
-| Buffers | | Copy | |
-|---|---|---|---|
-| ⌘N | New buffer | ⌘C | Copy (always plain) |
-| ⌘1–9 | Switch buffer | ⇧⌘C | Copy for Slack |
-| ⌘W | Close buffer | ⌥⌘C | Copy as rich text |
-| ⌘O | Open file | | |
-| ⌘S / ⇧⌘S | Save / Save As | | |
-
-| Markdown & transforms | | Other | |
-|---|---|---|---|
-| ⇧⌘F | Format Markdown | ⌘F | Find |
-| ⇧⌘P | Toggle preview | ⌥⌘E | Summon Editan from anywhere |
-| ⌃⌘1–9 | Insert format template | ⇧⌘N | Send to Notion |
-| ⌥⌘1–9 | Run LLM transform | ⌘, | Settings |
-
-## Installation
-
-### Build from source (recommended)
+**Requirements:** macOS 14+, full **Xcode 26+** (including its command-line tools), and [Homebrew](https://brew.sh/). The pinned Markdown dependencies use Swift tools 6.2; Editan's source uses Swift 5 language mode.
 
 ```sh
-# Prerequisites: macOS 14+, Xcode 16+ (App Store), Homebrew
-xcode-select --install            # if not installed yet
 brew install xcodegen
 git clone https://github.com/kohey18/editan.git
 cd editan
-./Scripts/install.sh              # builds Release and installs /Applications/Editan.app
+./Scripts/install.sh
 ```
 
-### Copy a prebuilt .app
+The script builds Release and installs `/Applications/Editan.app`, replacing an existing copy. Open Editan from Applications, or press **⌥⌘E** once it is running.
 
-Copy `/Applications/Editan.app` from a Mac that built it (AirDrop, USB, etc.) into the other Mac's `/Applications`. The app is ad-hoc signed (not notarized), so if the first launch is blocked:
+1. Press **⌘N** for a scratch buffer. Paste text with **⌘V**, or start writing.
+2. Toggle the preview with **⇧⌘P** or format Markdown with **⇧⌘F**.
+3. Copy with **⌘C**, **⇧⌘C**, or **⌥⌘C**, then paste into the destination.
 
-```sh
-xattr -dr com.apple.quarantine /Applications/Editan.app
-```
+Scratch buffers auto-save. Existing files use **⌘S**. Closing a scratch buffer deletes that draft after confirmation.
 
-or right-click the app in Finder and choose "Open".
+<details>
+<summary><strong>Optional: Claude transforms</strong></summary>
 
-### Optional integrations
+Install and authenticate the [Claude Code CLI](https://code.claude.com/docs/en/overview). Use a recent version supporting the flags documented in [the security policy](SECURITY.md#claude-transforms).
 
-- **LLM transforms** require the [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) (`claude`) installed and logged in — transforms run within your Claude subscription
-- **Notion export** is configured in Settings (⌘,) → Notion tab (integration token and parent page ID)
+In Settings (**⌘,**) → 変換, choose a model and edit transformation templates. Select text, or leave nothing selected to transform the full draft, then use the 変換 menu or **⌥⌘1–9**. Review the result before replacing the original or copying it.
 
-## Privacy & data
+Editan runs `claude -p` with built-in tools, MCP tools, slash commands, hooks, and session persistence disabled (administrator-managed policy may still apply). Your CLI authentication, provider configuration, usage limits, and billing still apply. A Claude subscription is not an unconditional guarantee of zero additional charges.
 
-- Scratch buffers live in `~/Library/Application Support/Editan/` as plain Markdown — yours to grep, back up, or sync however you like
-- Nothing leaves your Mac except what you explicitly trigger: LLM transforms (through your local `claude` CLI) and Notion export (Notion API)
-- No analytics, no crash reporting, no auto-update phoning home
+</details>
+
+<details>
+<summary><strong>Optional: Notion export</strong></summary>
+
+1. Create a Notion internal integration and connect it to the destination parent page.
+2. In Settings (**⌘,**) → Notion, enter the integration token and parent page ID.
+3. Click **トークンを Keychain に保存** to save the token to macOS Keychain.
+4. Press **⇧⌘N** to create a new page from the current buffer.
+
+The token is kept in macOS Keychain. Legacy tokens in preferences migrate when the Notion settings or export path is used; preferences are removed only after successful migration. Keychain access may ask for confirmation after rebuilding an ad-hoc signed app.
+
+</details>
+
+## Keyboard shortcuts
+
+⌘ Command · ⇧ Shift · ⌥ Option · ⌃ Control
+
+| Action | Shortcut | Action | Shortcut |
+| --- | --- | --- | --- |
+| Summon Editan | ⌥⌘E | Plain-text copy | ⌘C |
+| New buffer | ⌘N | Copy for Slack | ⇧⌘C |
+| Switch buffer | ⌘1–9 | Rich-text copy | ⌥⌘C |
+| Close buffer (with confirmation) | ⌘W | Send to Notion | ⇧⌘N |
+| Open file | ⌘O | Format Markdown | ⇧⌘F |
+| Save / Save As | ⌘S / ⇧⌘S | Toggle preview | ⇧⌘P |
+| Find | ⌘F | Insert snippet | ⌃⌘1–9 |
+| Paste as plain text | ⌘V | | |
+| Settings | ⌘, | Run transform | ⌥⌘1–9 |
+
+## Your data
+
+| Data | Location / behavior |
+| --- | --- |
+| Scratch drafts | `~/Library/Application Support/Editan/Buffers/<uuid>.md` |
+| Buffer index and templates | `~/Library/Application Support/Editan/` |
+| Opened files | Their original location; save explicitly |
+| Notion token | macOS Keychain; parent page ID remains in preferences |
+| Claude transform | Selected text or full draft sent through your configured CLI |
+| Notion export | Current buffer sent to the Notion API |
+
+Editan has no analytics, crash-reporting service, automatic update checks, or cloud sync. Drafts are plain files, **not encrypted by Editan**. The preview blocks remote resources and escapes raw HTML. Exported rich text can contain remote image URLs, which a receiving app may load. See [SECURITY.md](SECURITY.md) for the boundaries and reporting process.
 
 ## Development
 
-Requirements: Xcode 16+, [XcodeGen](https://github.com/yonaskolb/XcodeGen)
-
 ```sh
-brew install xcodegen
-xcodegen generate                 # project.yml → Editan.xcodeproj
+xcodegen generate
 open Editan.xcodeproj
+
+# Build the native app
+xcodebuild -project Editan.xcodeproj -scheme Editan \
+  -configuration Debug -derivedDataPath build/DerivedData build
+
+# Run the isolated security regression tests
+xcodebuild -project Editan.xcodeproj -scheme EditanSecurityTests \
+  -destination 'platform=macOS' -derivedDataPath build/DerivedData test
 ```
 
-Build from the CLI:
+`project.yml` is the source of truth; the generated `.xcodeproj` is ignored. Regenerate after adding, moving, or removing Swift files. Security tests run without launching the app or reading real Notion credentials.
 
-```sh
-xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Debug build
-```
+| Area | Responsibility |
+| --- | --- |
+| `Models/` | Buffers, persistence, editor commands |
+| `Editor/` | AppKit text view, plain-text clipboard, highlighting, IME handling |
+| `Preview/` | Safe Markdown-to-HTML conversion and the WebKit preview |
+| `Transforms/` · `Formats/` | Claude subprocess, Slack conversion, reusable templates |
+| `Notion/` | Block conversion, Keychain credentials, API export |
+| `Views/` · `Utils/` | SwiftUI interface, global hotkey, editor access |
+| `docs/` | Static English/Japanese landing page for GitHub Pages |
 
-`.xcodeproj` is not committed — `project.yml` is the source of truth. Re-run `xcodegen generate` after adding, removing, or moving source files.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for checks, [website maintenance](docs/website.md) for Pages, and [third-party notices](THIRD_PARTY_NOTICES.md) for dependencies.
 
-### Architecture at a glance
+## What's next
 
-```
-Editan/Sources/
-├── EditanApp.swift        # App entry: window, menu bar extra, settings, hotkey
-├── Models/                # Buffer + BufferStore (persistence, commands)
-├── Editor/                # NSTextView wrapper, Markdown highlighter
-├── Preview/               # Markdown → HTML, WKWebView preview
-├── Transforms/            # claude CLI subprocess, templates, Slack mrkdwn
-├── Notion/                # Markdown → Notion blocks, page-create API
-├── Utils/                 # editor access, global hotkey
-└── Views/                 # split pane, sidebar, menus, sheets, settings
-```
+Ideas under consideration, not promises of shipped features:
 
-Built with [swift-markdown](https://github.com/swiftlang/swift-markdown) for parsing and [highlight.js](https://highlightjs.org/) for code highlighting.
+- Preview scroll synchronization
+- Buffer search, pinning, and drag reordering
+- A diff view for transform results
+- More LLM providers and English app localization
+- Broader installation testing for downloadable releases
 
-## Roadmap
-
-- [ ] Landing page (EN/JP)
-- [ ] Mac App Store release
-- [ ] Auto-open `.md` files generated by AI coding agents (Claude Code, Codex)
-- [ ] Preview scroll sync
-- [ ] Buffer drag-reorder, pinning, and search
-- [ ] Diff view for transform results
-- [ ] Additional LLM providers (e.g. `codex exec`)
-
-## Contributing
-
-Issues and pull requests are welcome! A few notes:
-
-- Run `xcodegen generate` after any file add/remove/move
-- **⌘C must always copy plain text** — that invariant is the soul of the app
-- Editor changes must be verified with Japanese IME input (composition must never break)
-- There is no test target yet; please verify by building and running the app
+Have a use case or a small improvement? [Open an issue](https://github.com/kohey18/editan/issues) or [contribute a pull request](CONTRIBUTING.md). Bug reports, documentation, and Japanese IME testing all help.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) © 2026 [kohey18](https://github.com/kohey18). Built with [swift-markdown](https://github.com/swiftlang/swift-markdown), [swift-cmark](https://github.com/swiftlang/swift-cmark), and [highlight.js](https://highlightjs.org/).

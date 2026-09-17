@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7ff">
+  <meta name="description" content="Web やメールの文章を貼り付けると、プレーンテキストで編集できる Mac 専用エディタ。文章を整えて、次のアプリに合う書式でコピー。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Editan — 貼り付けたら、プレーンテキスト。</title>
+  <link rel="canonical" href="https://kohey18.github.io/editan/ja/">
+  <link rel="alternate" hreflang="en" href="https://kohey18.github.io/editan/">
+  <link rel="alternate" hreflang="ja" href="https://kohey18.github.io/editan/ja/">
+  <link rel="alternate" hreflang="x-default" href="https://kohey18.github.io/editan/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Editan — 貼り付けたら、プレーンテキスト。">
+  <meta property="og:description" content="貼り付けた文章をプレーンテキストで扱う。整えて、次のアプリへ。Mac 専用のオープンソースエディタ。">
+  <meta property="og:url" content="https://kohey18.github.io/editan/ja/">
+  <meta property="og:image" content="https://kohey18.github.io/editan/assets/social.png">
+  <meta property="og:image:width" content="1536">
+  <meta property="og:image:height" content="1024">
+  <meta property="og:image:alt" content="Editan — Paste it here. Make it yours. A paper sheet turns into a cyan paper arrow.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://kohey18.github.io/editan/assets/social.png">
+  <link rel="icon" type="image/png" href="../icon.png">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+<header class="site-header wrap">
+  <a class="wordmark" href="./" aria-label="Editan ホーム"><img src="../icon.png" width="36" height="36" alt="">editan<span class="wordmark-dot">.</span></a>
+  <nav aria-label="メインナビゲーション">
+    <a href="#workflow">使い方</a><a href="#details">こだわり</a>
+    <a class="language" href="../" lang="en" hreflang="en">English</a>
+    <a class="nav-github" href="https://github.com/kohey18/editan">GitHub <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+<main id="main">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span> 貼り付けた文章を、気持ちよく編集。</div>
+    <h1 id="hero-title">貼り付けたら、<br><em>プレーンテキスト。</em></h1>
+    <p class="hero-copy">Web やメール、ほかのアプリから文章をペースト。<br>元のフォントや色を持ち込まず、揃った見た目で編集できます。</p>
+    <div class="hero-actions"><a class="button primary" href="#install">Mac 用にビルド <span aria-hidden="true">↓</span></a><a class="text-link" href="https://github.com/kohey18/editan">ソースコードを見る <span aria-hidden="true">↗</span></a></div>
+    <p class="hero-meta">macOS 14+ <span>·</span> Swift 製ネイティブアプリ <span>·</span> 無料・オープンソース</p>
+    <figure class="product-shot">
+      <div class="shot-label"><span><span class="small-dot" aria-hidden="true"></span> 考えることに、余白を。</span><span>プレーンテキストで受け取って、次の場所へ。</span></div>
+      <div class="screenshot-crop"><img id="editor-image" src="../assets/editor.png" width="1600" height="1255" fetchpriority="high" alt="macOS 上の Editan。左に下書き一覧、中央に Markdown エディタ、右にコードを色分けしたライブプレビュー。"></div>
+      <figcaption><span>実際のアプリ画面・サンプルのリリースノート・UI は日本語</span><button class="replay" type="button" data-demo="../demo.gif" data-still="../assets/editor.png" aria-pressed="false" hidden>デモを再生 <span aria-hidden="true">↗</span></button></figcaption>
+    </figure>
+    <div class="destinations"><span>いつものアプリから、Editan へ。そして、次のアプリへ。</span><p>Claude Code <i>/</i> Slack <i>/</i> Gmail <i>/</i> Notion <i>/</i> そのほかにも。</p></div>
+  </section>
+
+  <section class="paste-section section wrap" aria-labelledby="paste-title">
+    <div class="section-heading"><p class="eyebrow">01 / 貼り付けるだけで、プレーンテキスト</p><h2 id="paste-title">まずは、文章だけに。</h2><p>フォントも文字の色も、コピー元に合わせ直す必要はありません。いつもの ⌘V で、Editan の中にプレーンテキストとして展開されます。</p></div>
+    <div class="paste-comparison">
+      <div class="paste-example"><p class="eyebrow">コピー元の見た目</p><div class="source-example"><h3>Next release</h3><p>Small improvements. Big difference.</p><p>Polish the details<br>Share with the team</p></div></div>
+      <span class="paste-arrow" aria-hidden="true">→</span>
+      <div class="paste-example clean"><p class="eyebrow">Editan に貼り付けたあと <kbd>⌘ V</kbd></p><pre>Next release
+Small improvements. Big difference.
+Polish the details
+Share with the team</pre></div>
+    </div>
+    <p class="paste-caption">書式を持ち込まない流れを示す例です。Markdown の構文ハイライトは Editan 側の表示です。</p>
+  </section>
+
+  <section class="workflow section wrap" id="workflow" aria-labelledby="workflow-title">
+    <div class="section-heading"><p class="eyebrow">02 / 貼り付ける、整える、コピーする</p><h2 id="workflow-title">いつもの作業の、<br><em>ちょっと手前に。</em></h2><p>いろいろな場所から集めた文章を、次の作業へ。<br>その間に、プレーンテキストで編集できる場所を。</p></div>
+    <div class="steps">
+      <article><span class="step-number">01</span><h3>まず、ペースト。</h3><p><kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>E</kbd> で呼び出し、<kbd>⌘</kbd> <kbd>V</kbd> で貼り付け。エディタの見た目に揃い、そのまま編集できます。下書きは自動保存されます。</p><span class="step-note">PASTE →</span></article>
+      <article><span class="step-number">02</span><h3>しっくりくる言葉に。</h3><p>Markdown をプレビューして整形。必要なら Claude に校正・要約・口調の変更を依頼。結果を確認してから置き換えられます。</p><span class="step-note">REFINE →</span></article>
+      <article><span class="step-number">03</span><h3>あとは、いつもの場所へ。</h3><p>プロンプトにはプレーンテキスト、Slack には専用の書式、メールにはリッチテキスト。Notion のページ作成にも対応します。</p><span class="step-note">COPY &amp; GO ↗</span></article>
+    </div>
+  </section>
+
+  <section class="copy-section" aria-labelledby="copy-title">
+    <div class="wrap copy-layout">
+      <div><p class="eyebrow">03 / 貼り付け先に合うコピー</p><h2 id="copy-title">ひとつの文章を、<br><em>それぞれの場所へ。</em></h2><p>書式も、気持ちよく持ち運べるように。貼り付け先に合うコピーを、ショートカットで選べます。</p><p class="plain-promise"><kbd>⌘</kbd> <kbd>C</kbd> <strong>いつでもプレーンテキスト。</strong><br>意図しないフォントを持ち込みません。</p><p class="example-note">書式の違いを試せるサンプルです。Editan のブラウザ版ではありません。</p></div>
+      <div class="format-demo">
+        <div class="format-tabs" role="tablist" aria-label="コピー書式のサンプル">
+          <button type="button" role="tab" id="tab-plain" aria-controls="format-panel" aria-selected="true" tabindex="0" data-format="plain">プレーン</button>
+          <button type="button" role="tab" id="tab-slack" aria-controls="format-panel" aria-selected="false" tabindex="-1" data-format="slack">Slack</button>
+          <button type="button" role="tab" id="tab-rich" aria-controls="format-panel" aria-selected="false" tabindex="-1" data-format="rich">リッチ</button>
+          <button type="button" role="tab" id="tab-notion" aria-controls="format-panel" aria-selected="false" tabindex="-1" data-format="notion">Notion</button>
+        </div>
+        <div id="format-panel" class="format-panel" role="tabpanel" aria-labelledby="tab-plain" tabindex="0">
+          <div class="demo-context"><span id="format-destination">次のプロンプトに</span><kbd id="format-shortcut">⌘ C</kbd></div>
+          <pre id="format-plain"># Ready to ship
+
+**Small improvements. Big difference.**
+
+- Polish the details
+- Share with the team</pre>
+          <div id="format-rich" class="rich-example" hidden><h3>Ready to ship</h3><p><strong>Small improvements. Big difference.</strong></p><ul><li>Polish the details</li><li>Share with the team</li></ul></div>
+          <p id="format-note" class="format-note">Markdown はそのまま。クリップボードにはプレーンテキストだけ。</p>
+        </div>
+        <div class="demo-footer"><span>ひとつの下書きから、次の作業へ。</span><button id="copy-example" type="button" hidden>サンプルをコピー ↗</button><span id="copy-status" role="status" aria-live="polite"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap details-section" id="details" aria-labelledby="details-title">
+    <div class="section-heading"><p class="eyebrow">04 / 小さなアプリに、細やかな気配り</p><h2 id="details-title">書くことのそばに、<br><em>必要なものだけ。</em></h2></div>
+    <div class="detail-grid">
+      <article><div class="feature-symbol" aria-hidden="true">⌘</div><h3>Mac になじむ使い心地。</h3><p>SwiftUI と AppKit で作ったネイティブアプリ。メニューバーから呼び出し、Finder からファイルを開く。いつものキー操作で使えます。</p></article>
+      <article><div class="feature-symbol" aria-hidden="true">Aa</div><h3>日本語も、そのまま気持ちよく。</h3><p>IME の変換中の入力に配慮。スマート引用符や自動修正はオフ。リストや引用の改行補完、定型文の挿入で繰り返しもスムーズに。</p></article>
+      <article><div class="feature-symbol" aria-hidden="true">#</div><h3>見た目も、すぐ隣に。</h3><p>左右分割の Markdown プレビュー。コードの色分けとブロックごとのコピー。編集とプレビューはオフラインで使えます。</p></article>
+      <article><div class="feature-symbol" aria-hidden="true">↗</div><h3>必要なときだけ、お手伝い。</h3><p>敬語化、カジュアル化、校正、要約、独自のプロンプト。任意の Claude Code 連携で、選択範囲にも文章全体にも使えます。</p></article>
+    </div>
+    <aside class="local-note"><div><span class="eyebrow">普段の作業は、Mac の中で。</span><h3>下書きは、あなたの Mac に。</h3></div><p>下書きは普通の Markdown ファイル。Editan のアカウント、解析、クラウド同期はありません。Claude 変換時は選択範囲または下書きを CLI 経由で、Notion 送信時は現在のバッファを Notion に送信します。どちらも明示的な操作で実行します。</p></aside>
+  </section>
+
+  <section class="install-section" id="install" aria-labelledby="install-title">
+    <div class="wrap install-layout">
+      <div><p class="eyebrow">05 / あなたの Mac に、どうぞ。</p><h2 id="install-title">小さな道具を、<br><em>あなたのものに。</em></h2><p>Editan は開発初期の MIT ライセンスのプロジェクト。<br>ビルドして、使って、一緒に育ててください。</p><p class="install-note">macOS 14 以降、フル版 Xcode 26 以降、Homebrew が必要です。ソースビルドは ad-hoc 署名です。ビルド不要の<a href="https://github.com/kohey18/editan-releases/releases">配布版はこちら</a>。App Store 版はまだありません。</p><a class="text-link" href="https://github.com/kohey18/editan/blob/main/CONTRIBUTING.md">開発に参加する ↗</a></div>
+      <div class="terminal"><div class="terminal-bar"><span aria-hidden="true">● ● ●</span><span>ソースからビルド</span><button id="copy-install" type="button" hidden>コピー</button></div><pre><code id="install-command">brew install xcodegen
+git clone https://github.com/kohey18/editan.git
+cd editan
+./Scripts/install.sh</code></pre><p>/Applications/Editan.app にインストールします</p><span id="install-status" role="status" aria-live="polite"></span></div>
+    </div>
+  </section>
+
+  <section class="section wrap faq-section" aria-labelledby="faq-title">
+    <div><p class="eyebrow">もう少し詳しく</p><h2 id="faq-title">よくある質問。</h2></div>
+    <div class="faq-list">
+      <details><summary>貼り付けると、自動で Markdown に変換されますか？</summary><p>貼り付けは、コピー元のテキストをプレーンテキストで取り込む操作です。Web ページの装飾やレイアウトを Markdown の記法に変換するものではありません。もともと含まれる Markdown の文字は、そのまま編集できます。</p></details>
+      <details><summary>Claude は必須ですか？</summary><p>いいえ。下書き、Markdown プレビュー、整形、定型文、コピーは Claude なしで使えます。AI 変換のみ、認証済みの新しい Claude Code CLI が必要です。利用枠や課金は CLI の設定に従います。</p></details>
+      <details><summary>「Slack 用にコピー」で送信されますか？</summary><p>送信はしません。Slack 向けのテキストをコピーして、ご自身で貼り付けます。リッチテキストのコピーも同様です。Notion 送信は、設定した連携と親ページを使って新しいページを作成します。</p></details>
+      <details><summary>下書きと認証情報はどこに保存されますか？</summary><p>下書きは ~/Library/Application Support/Editan/Buffers/ 内の Markdown ファイルです。Editan による暗号化は行いません。Notion トークンは macOS Keychain に保存します。旧形式からの移行に成功すると、以前の設定値を削除します。</p></details>
+      <details><summary>Windows 版や Web 版はありますか？</summary><p>現在は macOS 専用です。アプリの UI は日本語。このサイトは英語と日本語で利用できます。</p></details>
+    </div>
+  </section>
+  <figure class="brand-art wrap"><img src="../assets/social.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Editan — Paste it here. Make it yours. 水色の矢印へと変わる紙のイラスト。"></figure>
+</main>
+<footer class="wrap site-footer"><div><a class="wordmark" href="./"><img src="../icon.png" width="30" height="30" alt="">editan.</a><p>文章を受け取って、あなたの言葉で送り出す。</p></div><div class="footer-links"><a href="https://github.com/kohey18/editan">ソース ↗</a><a href="https://github.com/kohey18/editan/issues">課題・提案 ↗</a><a href="https://github.com/kohey18/editan/blob/main/SECURITY.md">セキュリティ ↗</a><a href="https://github.com/kohey18/editan/blob/main/LICENSE">MIT ライセンス ↗</a></div><p class="footer-credit"><a href="https://github.com/kohey18">kohey18</a> が開発。どなたでも参加できます。</p></footer>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7ff">
+  <meta name="description" content="Paste text from other apps into a clean, plain-text editor on your Mac. Refine it, preview Markdown, then copy in the format your next destination needs.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Editan — Paste it here. Make it yours.</title>
+  <link rel="canonical" href="https://kohey18.github.io/editan/">
+  <link rel="alternate" hreflang="en" href="https://kohey18.github.io/editan/">
+  <link rel="alternate" hreflang="ja" href="https://kohey18.github.io/editan/ja/">
+  <link rel="alternate" hreflang="x-default" href="https://kohey18.github.io/editan/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Editan — Paste it here. Make it yours.">
+  <meta property="og:description" content="Paste as plain text. Make the words your own. Copy in the format you need. A native, open-source macOS editor.">
+  <meta property="og:url" content="https://kohey18.github.io/editan/">
+  <meta property="og:image" content="https://kohey18.github.io/editan/assets/social.png">
+  <meta property="og:image:width" content="1536">
+  <meta property="og:image:height" content="1024">
+  <meta property="og:image:alt" content="Editan — Paste it here. Make it yours. A paper sheet turns into a cyan paper arrow.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://kohey18.github.io/editan/assets/social.png">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header wrap">
+  <a class="wordmark" href="./" aria-label="Editan home"><img src="icon.png" width="36" height="36" alt="">editan<span class="wordmark-dot">.</span></a>
+  <nav aria-label="Main navigation">
+    <a href="#workflow">How it works</a><a href="#details">The details</a>
+    <a class="language" href="ja/" lang="ja" hreflang="ja">日本語</a>
+    <a class="nav-github" href="https://github.com/kohey18/editan">GitHub <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+<main id="main">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span> A FRESH START FOR THE TEXT YOU PASTE</div>
+    <h1 id="hero-title">Paste it here.<br>Make it <em>yours.</em></h1>
+    <p class="hero-copy">Paste text from a web page, an email, or another app.<br>Editan brings it in as plain text, ready to edit in one consistent style.</p>
+    <div class="hero-actions"><a class="button primary" href="#install">Build for your Mac <span aria-hidden="true">↓</span></a><a class="text-link" href="https://github.com/kohey18/editan">Explore the source <span aria-hidden="true">↗</span></a></div>
+    <p class="hero-meta">macOS 14+ <span>·</span> Native Swift app <span>·</span> Free &amp; open source</p>
+    <figure class="product-shot">
+      <div class="shot-label"><span><span class="small-dot" aria-hidden="true"></span> YOUR THOUGHTS, WITH ROOM TO BREATHE</span><span>Plain text in. Ready for what’s next.</span></div>
+      <div class="screenshot-crop"><img id="editor-image" src="assets/editor.png" width="1600" height="1255" fetchpriority="high" alt="Editan on macOS: scratch buffers on the left, Markdown in the middle, and a live preview with highlighted code on the right."></div>
+      <figcaption><span>Actual app capture · sample release notes · current app UI is Japanese</span><button class="replay" type="button" data-demo="demo.gif" data-still="assets/editor.png" aria-pressed="false" hidden>Play demo <span aria-hidden="true">↗</span></button></figcaption>
+    </figure>
+    <div class="destinations"><span>FROM YOUR EVERYDAY APPS. BACK TO YOUR EVERYDAY APPS.</span><p>Claude Code <i>/</i> Slack <i>/</i> Gmail <i>/</i> Notion <i>/</i> anything else.</p></div>
+  </section>
+
+  <section class="paste-section section wrap" aria-labelledby="paste-title">
+    <div class="section-heading"><p class="eyebrow">01 / PLAIN TEXT ON THE WAY IN</p><h2 id="paste-title">Start with plain text.</h2><p>No font or text-color cleanup before you can begin. A normal ⌘V brings pasted text into Editan as plain text, ready to work with.</p></div>
+    <div class="paste-comparison">
+      <div class="paste-example"><p class="eyebrow">COPIED FROM ANOTHER APP</p><div class="source-example"><h3>Next release</h3><p>Small improvements. Big difference.</p><p>Polish the details<br>Share with the team</p></div></div>
+      <span class="paste-arrow" aria-hidden="true">→</span>
+      <div class="paste-example clean"><p class="eyebrow">PASTED INTO EDITAN <kbd>⌘ V</kbd></p><pre>Next release
+Small improvements. Big difference.
+Polish the details
+Share with the team</pre></div>
+    </div>
+    <p class="paste-caption">An illustration of formatting removal. Markdown syntax highlighting is Editan’s own presentation.</p>
+  </section>
+
+  <section class="workflow section wrap" id="workflow" aria-labelledby="workflow-title">
+    <div class="section-heading"><p class="eyebrow">02 / PASTE, REFINE, COPY</p><h2 id="workflow-title">A stop along the way.<br><em>Not another destination.</em></h2><p>Text arrives from all over and leaves for somewhere new.<br>Editan gives you a plain-text workspace in between.</p></div>
+    <div class="steps">
+      <article><span class="step-number">01</span><h3>Paste. Start fresh.</h3><p>Summon Editan with <kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>E</kbd> and paste with <kbd>⌘</kbd> <kbd>V</kbd>. The text takes on the editor’s style. Scratch drafts save automatically.</p><span class="step-note">PASTE →</span></article>
+      <article><span class="step-number">02</span><h3>Find the right words.</h3><p>Preview your Markdown. Format it. Or ask Claude to proofread, summarize, or change the tone. You review the result before replacing anything.</p><span class="step-note">REFINE →</span></article>
+      <article><span class="step-number">03</span><h3>Send them on their way.</h3><p>Copy plain text for a prompt, Slack-style text for a message, rich text for email, or create a Notion page.</p><span class="step-note">COPY &amp; GO ↗</span></article>
+    </div>
+  </section>
+
+  <section class="copy-section" aria-labelledby="copy-title">
+    <div class="wrap copy-layout">
+      <div><p class="eyebrow">03 / THE RIGHT KIND OF COPY</p><h2 id="copy-title">Same thought.<br><em>Different places.</em></h2><p>Formatting should travel well. Choose what the destination needs, with a shortcut for each.</p><p class="plain-promise"><kbd>⌘</kbd> <kbd>C</kbd> <strong>Always plain text.</strong><br>No surprise fonts riding along.</p><p class="example-note">Try the format examples. This is a guided illustration, not a browser version of Editan.</p></div>
+      <div class="format-demo">
+        <div class="format-tabs" role="tablist" aria-label="Copy format examples">
+          <button type="button" role="tab" id="tab-plain" aria-controls="format-panel" aria-selected="true" tabindex="0" data-format="plain">Plain text</button>
+          <button type="button" role="tab" id="tab-slack" aria-controls="format-panel" aria-selected="false" tabindex="-1" data-format="slack">Slack</button>
+          <button type="button" role="tab" id="tab-rich" aria-controls="format-panel" aria-selected="false" tabindex="-1" data-format="rich">Rich text</button>
+          <button type="button" role="tab" id="tab-notion" aria-controls="format-panel" aria-selected="false" tabindex="-1" data-format="notion">Notion</button>
+        </div>
+        <div id="format-panel" class="format-panel" role="tabpanel" aria-labelledby="tab-plain" tabindex="0">
+          <div class="demo-context"><span id="format-destination">FOR YOUR NEXT PROMPT</span><kbd id="format-shortcut">⌘ C</kbd></div>
+          <pre id="format-plain"># Ready to ship
+
+**Small improvements. Big difference.**
+
+- Polish the details
+- Share with the team</pre>
+          <div id="format-rich" class="rich-example" hidden><h3>Ready to ship</h3><p><strong>Small improvements. Big difference.</strong></p><ul><li>Polish the details</li><li>Share with the team</li></ul></div>
+          <p id="format-note" class="format-note">Markdown stays Markdown. The clipboard gets plain text.</p>
+        </div>
+        <div class="demo-footer"><span>ONE DRAFT. READY FOR WHAT’S NEXT.</span><button id="copy-example" type="button" hidden>Copy example ↗</button><span id="copy-status" role="status" aria-live="polite"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap details-section" id="details" aria-labelledby="details-title">
+    <div class="section-heading"><p class="eyebrow">04 / SMALL APP. CONSIDERED DETAILS.</p><h2 id="details-title">Less between you<br><em>and your words.</em></h2></div>
+    <div class="detail-grid">
+      <article><div class="feature-symbol" aria-hidden="true">⌘</div><h3>Feels at home on your Mac.</h3><p>SwiftUI and AppKit. A menu bar companion. Open Markdown and text files from Finder. Work with familiar keyboard shortcuts.</p></article>
+      <article><div class="feature-symbol" aria-hidden="true">Aa</div><h3>Let your typing be your typing.</h3><p>Japanese IME-aware editing, without smart quotes or autocorrect. Lists and quotes continue on a new line. Reusable snippets handle the repetitive parts.</p></article>
+      <article><div class="feature-symbol" aria-hidden="true">#</div><h3>See what you mean.</h3><p>A split Markdown preview, bundled code highlighting, and a copy button on each code block. Editing and preview work offline.</p></article>
+      <article><div class="feature-symbol" aria-hidden="true">↗</div><h3>A rewrite, when you want one.</h3><p>Polite Japanese, a casual tone, proofreading, summaries, or your own prompt. Optional Claude Code integration works on a selection or the whole draft.</p></article>
+    </div>
+    <aside class="local-note"><div><span class="eyebrow">LOCAL BY DEFAULT</span><h3>Your drafts live on your Mac.</h3></div><p>Scratch buffers are ordinary Markdown files. No Editan account, analytics, or cloud sync. Optional Claude transforms send the selected text or draft through your CLI; Notion export sends the current buffer to Notion. You initiate both.</p></aside>
+  </section>
+
+  <section class="install-section" id="install" aria-labelledby="install-title">
+    <div class="wrap install-layout">
+      <div><p class="eyebrow">05 / MAKE YOURSELF AT HOME</p><h2 id="install-title">A small tool.<br><em>Yours to make your own.</em></h2><p>Editan is an early-stage, MIT-licensed project.<br>Build it, use it, and help shape what comes next.</p><p class="install-note">Requires macOS 14+, full Xcode 26+, and Homebrew. Source builds are ad-hoc signed. <a href="https://github.com/kohey18/editan-releases/releases">Prebuilt downloads</a> are available separately. There is no App Store release.</p><a class="text-link" href="https://github.com/kohey18/editan/blob/main/CONTRIBUTING.md">Help make Editan better ↗</a></div>
+      <div class="terminal"><div class="terminal-bar"><span aria-hidden="true">● ● ●</span><span>BUILD FROM SOURCE</span><button id="copy-install" type="button" hidden>Copy</button></div><pre><code id="install-command">brew install xcodegen
+git clone https://github.com/kohey18/editan.git
+cd editan
+./Scripts/install.sh</code></pre><p>Installs to /Applications/Editan.app</p><span id="install-status" role="status" aria-live="polite"></span></div>
+    </div>
+  </section>
+
+  <section class="section wrap faq-section" aria-labelledby="faq-title">
+    <div><p class="eyebrow">A FEW MORE THINGS</p><h2 id="faq-title">Good to know.</h2></div>
+    <div class="faq-list">
+      <details><summary>Does pasting automatically convert a page to Markdown?</summary><p>Pasting imports the text supplied by the source clipboard as plain text. It does not convert a web page’s visual formatting or layout into Markdown syntax. Existing Markdown characters remain editable as text.</p></details>
+      <details><summary>Do I need Claude to use Editan?</summary><p>No. Drafting, Markdown preview, formatting, snippets, and clipboard features work without Claude. Only AI transforms require a recent Claude Code CLI with working authentication. Usage limits and billing follow your CLI configuration.</p></details>
+      <details><summary>Does “Copy for Slack” send a message?</summary><p>No. It puts Slack-style text on your clipboard for you to paste. Rich-text copy works the same way. Notion export is different: it creates a page using the integration and parent page you configure in Settings.</p></details>
+      <details><summary>Where are my drafts and credentials?</summary><p>Scratch drafts are plain Markdown under ~/Library/Application Support/Editan/Buffers/. They are not encrypted by Editan. Notion tokens use macOS Keychain. When a legacy token is migrated successfully, its old preference is removed.</p></details>
+      <details><summary>Is there a Windows or web version?</summary><p>Not currently. Editan is a native macOS app, and its interface currently uses Japanese labels. This website is available in English and Japanese.</p></details>
+    </div>
+  </section>
+  <figure class="brand-art wrap"><img src="assets/social.png" width="1536" height="1024" loading="lazy" decoding="async" alt="Editan — Paste it here. Make it yours. A paper sheet turns into a cyan paper arrow."></figure>
+</main>
+<footer class="wrap site-footer"><div><a class="wordmark" href="./"><img src="icon.png" width="30" height="30" alt="">editan.</a><p>Plain text in. Your words out.</p></div><div class="footer-links"><a href="https://github.com/kohey18/editan">Source ↗</a><a href="https://github.com/kohey18/editan/issues">Issues ↗</a><a href="https://github.com/kohey18/editan/blob/main/SECURITY.md">Security ↗</a><a href="https://github.com/kohey18/editan/blob/main/LICENSE">MIT License ↗</a></div><p class="footer-credit">Made by <a href="https://github.com/kohey18">kohey18</a>. Open to everyone.</p></footer>
+</body>
+</html>
