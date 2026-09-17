@@ -149,7 +149,7 @@ final class BufferStore: ObservableObject {
             saveSelectedAs()
             return
         }
-        try? buffers[idx].content.write(to: url, atomically: true, encoding: .utf8)
+        guard write(buffers[idx].content, to: url) else { return }
         buffers[idx].hasUnsavedChanges = false
     }
 
@@ -162,7 +162,8 @@ final class BufferStore: ObservableObject {
         panel.nameFieldStringValue = buffer.isScratch ? "\(buffer.title).md" : buffer.title
         guard panel.runModal() == .OK, let url = panel.url else { return }
 
-        try? buffer.content.write(to: url, atomically: true, encoding: .utf8)
+        // 保存が成功したときだけスクラッチの元ファイルを消す(失敗時に下書きを失わない)
+        guard write(buffer.content, to: url) else { return }
         if buffer.isScratch {
             try? FileManager.default.removeItem(at: scratchFileURL(buffer.id))
             dirtyScratchIDs.remove(buffer.id)
@@ -170,6 +171,19 @@ final class BufferStore: ObservableObject {
         buffers[idx].fileURL = url
         buffers[idx].hasUnsavedChanges = false
         saveIndex()
+    }
+
+    private func write(_ content: String, to url: URL) -> Bool {
+        do {
+            try content.write(to: url, atomically: true, encoding: .utf8)
+            return true
+        } catch {
+            let alert = NSAlert()
+            alert.messageText = "保存できませんでした"
+            alert.informativeText = "「\(url.lastPathComponent)」に書き込めません。\(error.localizedDescription)"
+            alert.runModal()
+            return false
+        }
     }
 
     // MARK: - 変換・コピー
