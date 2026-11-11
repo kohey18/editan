@@ -39,7 +39,10 @@ struct ShortcutHelpView: View {
             Shortcut(key: "⌘,", label: "設定(テンプレート編集)"),
         ]),
         Group(title: "その他", items: [
-            Shortcut(key: "⌘F", label: "検索"),
+            Shortcut(key: "⌘F", label: "検索(↩ 次 / ⇧↩ 前)"),
+            Shortcut(key: "⌘G / ⇧⌘G", label: "次 / 前を検索"),
+            Shortcut(key: "⌘+ / ⌘-", label: "拡大 / 縮小"),
+            Shortcut(key: "⌘0", label: "実際のサイズ"),
             Shortcut(key: "⌥⌘E", label: "どこからでも Editan を開く"),
             Shortcut(key: "⇧⌘N", label: "Notion に送る"),
         ]),

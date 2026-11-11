@@ -6,6 +6,7 @@ struct EditanApp: App {
     @StateObject private var store = BufferStore()
     @StateObject private var transforms = TransformStore()
     @StateObject private var formats = FormatStore()
+    @StateObject private var find = FindController()
 
     init() {
         HotKeyManager.shared.register()
@@ -16,11 +17,12 @@ struct EditanApp: App {
             ContentView()
                 .environmentObject(store)
                 .environmentObject(transforms)
+                .environmentObject(find)
                 .onAppear { appDelegate.store = store }
         }
         .defaultSize(width: 1100, height: 700)
         .commands {
-            AppCommands(store: store, transforms: transforms, formats: formats)
+            AppCommands(store: store, transforms: transforms, formats: formats, find: find)
         }
 
         MenuBarExtra("Editan", systemImage: "arrow.up.doc") {
