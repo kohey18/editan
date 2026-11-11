@@ -8,6 +8,26 @@ final class BufferStore: ObservableObject {
     @Published var buffers: [Buffer] = []
     @Published var selectedID: UUID?
     @Published var showPreview = true
+    /// エディタとプレビューの表示倍率(⌘+ / ⌘- / ⌘0)。Chrome と同じ段階で変わる
+    @Published private(set) var zoom: Double = {
+        let saved = UserDefaults.standard.double(forKey: "editorZoom")
+        return saved > 0 ? saved : 1.0
+    }() {
+        didSet { UserDefaults.standard.set(zoom, forKey: "editorZoom") }
+    }
+    static let zoomLevels: [Double] = [0.5, 0.67, 0.75, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0]
+
+    func zoomIn() {
+        zoom = Self.zoomLevels.first { $0 > zoom + 0.001 } ?? zoom
+    }
+
+    func zoomOut() {
+        zoom = Self.zoomLevels.last { $0 < zoom - 0.001 } ?? zoom
+    }
+
+    func resetZoom() {
+        zoom = 1.0
+    }
 
     private let rootDir: URL
     private let scratchDir: URL

@@ -40,12 +40,14 @@ final class SourceMap {
 
 @MainActor
 enum MarkdownHighlighter {
-    static let baseFont = NSFont.monospacedSystemFont(ofSize: 14, weight: .regular)
-    static let boldFont = NSFont.monospacedSystemFont(ofSize: 14, weight: .bold)
-    static let baseAttributes: [NSAttributedString.Key: Any] = [
-        .font: baseFont,
-        .foregroundColor: NSColor.textColor,
-    ]
+    static let defaultFontSize: CGFloat = 14
+    /// ズーム(⌘+ / ⌘-)で変わる現在のフォントサイズ
+    static var fontSize: CGFloat = defaultFontSize
+    static var baseFont: NSFont { NSFont.monospacedSystemFont(ofSize: fontSize, weight: .regular) }
+    static var boldFont: NSFont { NSFont.monospacedSystemFont(ofSize: fontSize, weight: .bold) }
+    static var baseAttributes: [NSAttributedString.Key: Any] {
+        [.font: baseFont, .foregroundColor: NSColor.textColor]
+    }
 
     static func highlight(_ textView: NSTextView) {
         guard let storage = textView.textStorage else { return }
@@ -55,10 +57,11 @@ enum MarkdownHighlighter {
 
         let document = Document(parsing: string)
         let map = SourceMap(string)
+        let bold = boldFont
 
         storage.beginEditing()
         storage.setAttributes(baseAttributes, range: full)
-        var styler = Styler(storage: storage, map: map, limit: full.length)
+        var styler = Styler(storage: storage, map: map, limit: full.length, boldFont: bold)
         styler.visit(document)
         storage.endEditing()
     }
@@ -68,6 +71,7 @@ private struct Styler: MarkupWalker {
     let storage: NSTextStorage
     let map: SourceMap
     let limit: Int
+    let boldFont: NSFont
 
     private static let codeBackground = NSColor.gray.withAlphaComponent(0.15)
 
@@ -84,12 +88,12 @@ private struct Styler: MarkupWalker {
     }
 
     mutating func visitHeading(_ heading: Heading) {
-        add([.font: MarkdownHighlighter.boldFont, .foregroundColor: NSColor.systemBlue], to: heading)
+        add([.font: boldFont, .foregroundColor: NSColor.systemBlue], to: heading)
         descendInto(heading)
     }
 
     mutating func visitStrong(_ strong: Strong) {
-        add([.font: MarkdownHighlighter.boldFont], to: strong)
+        add([.font: boldFont], to: strong)
         descendInto(strong)
     }
 

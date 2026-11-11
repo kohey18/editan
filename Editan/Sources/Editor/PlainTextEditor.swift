@@ -3,6 +3,9 @@ import SwiftUI
 
 /// コピーが常にプレーンテキストであることを保証する NSTextView。
 final class PlainTextView: NSTextView {
+    /// 検索バーを閉じてマッチを選択したときなど、選択時アクションバーを 1 回だけ出さない
+    var suppressNextSelectionBar = false
+
     override func copy(_ sender: Any?) {
         copySelectionAsPlainText()
     }
@@ -130,6 +133,7 @@ private struct SelectionActionBar: View {
 struct PlainTextEditor: NSViewRepresentable {
     @Binding var text: String
     var highlightsMarkdown = true
+    var fontSize: CGFloat = MarkdownHighlighter.defaultFontSize
     var onFormatSelection: (() -> Void)?
     var onKeigoSelection: (() -> Void)?
 
@@ -137,6 +141,8 @@ struct PlainTextEditor: NSViewRepresentable {
 
     func makeNSView(context: Context) -> NSScrollView {
         let textView = PlainTextView(frame: .zero)
+        MarkdownHighlighter.fontSize = fontSize
+        context.coordinator.appliedFontSize = fontSize
         textView.isRichText = false
         textView.importsGraphics = false
         textView.allowsUndo = true
@@ -149,8 +155,8 @@ struct PlainTextEditor: NSViewRepresentable {
         textView.isContinuousSpellCheckingEnabled = false
         textView.isGrammarCheckingEnabled = false
         textView.smartInsertDeleteEnabled = false
-        textView.usesFindBar = true
-        textView.isIncrementalSearchingEnabled = true
+        // 検索は独自の FindBar(⌘F)で行う
+        textView.usesFindBar = false
         textView.textContainerInset = NSSize(width: 8, height: 12)
         textView.delegate = context.coordinator
 
@@ -184,6 +190,21 @@ struct PlainTextEditor: NSViewRepresentable {
                 MarkdownHighlighter.highlight(textView)
             }
         }
+        // ズーム変更。IME 変換中は属性を触らず、確定後の更新で反映する
+        if context.coordinator.appliedFontSize != fontSize, !textView.hasMarkedText() {
+            context.coordinator.appliedFontSize = fontSize
+            MarkdownHighlighter.fontSize = fontSize
+            textView.font = MarkdownHighlighter.baseFont
+            textView.typingAttributes = MarkdownHighlighter.baseAttributes
+            if highlightsMarkdown {
+                MarkdownHighlighter.highlight(textView)
+            } else if let storage = textView.textStorage, storage.length > 0 {
+                storage.setAttributes(
+                    MarkdownHighlighter.baseAttributes,
+                    range: NSRange(location: 0, length: storage.length)
+                )
+            }
+        }
     }
 
     final class Coordinator: NSObject, NSTextViewDelegate {
@@ -191,6 +212,7 @@ struct PlainTextEditor: NSViewRepresentable {
         private var pendingHighlight: DispatchWorkItem?
         private var pendingSelectionBar: DispatchWorkItem?
         private var selectionBar: NSView?
+        var appliedFontSize: CGFloat = 0
 
         init(_ parent: PlainTextEditor) {
             self.parent = parent
@@ -209,6 +231,10 @@ struct PlainTextEditor: NSViewRepresentable {
             guard let textView = notification.object as? NSTextView else { return }
             pendingSelectionBar?.cancel()
             removeSelectionBar()
+            if let plain = textView as? PlainTextView, plain.suppressNextSelectionBar {
+                plain.suppressNextSelectionBar = false
+                return
+            }
             guard textView.selectedRange().length > 0 else { return }
             let work = DispatchWorkItem { [weak self, weak textView] in
                 MainActor.assumeIsolated {

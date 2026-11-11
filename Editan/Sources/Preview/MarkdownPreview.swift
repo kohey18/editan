@@ -3,6 +3,7 @@ import WebKit
 
 struct MarkdownPreview: NSViewRepresentable {
     let markdown: String
+    var zoom: Double = 1.0
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -11,12 +12,14 @@ struct MarkdownPreview: NSViewRepresentable {
         // コードブロックのコピーボタン → ネイティブでペーストボードに書く
         configuration.userContentController.add(context.coordinator, name: "copyCode")
         let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.pageZoom = zoom
         webView.navigationDelegate = context.coordinator
         context.coordinator.webView = webView
         return webView
     }
 
     func updateNSView(_ webView: WKWebView, context: Context) {
+        if webView.pageZoom != zoom { webView.pageZoom = zoom }
         context.coordinator.render(markdown: markdown)
     }
 

@@ -4,6 +4,7 @@ struct AppCommands: Commands {
     @ObservedObject var store: BufferStore
     @ObservedObject var transforms: TransformStore
     @ObservedObject var formats: FormatStore
+    @ObservedObject var find: FindController
 
     var body: some Commands {
         CommandGroup(replacing: .newItem) {
@@ -31,7 +32,25 @@ struct AppCommands: Commands {
             Button("Markdown を整形") { store.formatMarkdown() }
                 .keyboardShortcut("f", modifiers: [.command, .shift])
         }
+        CommandGroup(replacing: .textEditing) {
+            Button("検索…") { find.show() }
+                .keyboardShortcut("f", modifiers: .command)
+            Button("次を検索") { find.next() }
+                .keyboardShortcut("g", modifiers: .command)
+            Button("前を検索") { find.previous() }
+                .keyboardShortcut("g", modifiers: [.command, .shift])
+            Button("選択部分を検索に使用") { find.useSelection() }
+                .keyboardShortcut("e", modifiers: .command)
+        }
         CommandGroup(after: .toolbar) {
+            // キー入力は AppDelegate のローカルモニタが処理する(ここは表示とクリック用)
+            Button("拡大") { store.zoomIn() }
+                .keyboardShortcut("+", modifiers: .command)
+            Button("縮小") { store.zoomOut() }
+                .keyboardShortcut("-", modifiers: .command)
+            Button("実際のサイズ") { store.resetZoom() }
+                .keyboardShortcut("0", modifiers: .command)
+            Divider()
             Button(store.showPreview ? "プレビューを隠す" : "プレビューを表示") {
                 store.showPreview.toggle()
             }
