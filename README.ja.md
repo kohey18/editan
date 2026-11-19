@@ -52,7 +52,15 @@ Release ビルドを `/Applications/Editan.app` にインストールします�
 EDITAN_TEAM_ID=XXXXXXXXXX ./Scripts/install.sh
 ```
 
-チーム ID は Xcode の Settings → Accounts、または developer.apple.com の Membership details で確認できます(証明書名の括弧内の ID とは別物です)。
+チーム ID は、キーチェーンにある Apple Development 証明書から次のコマンドで一覧できます(左がチーム ID、右がチーム名)。
+
+```sh
+security find-certificate -a -c "Apple Development" -p \
+  | awk '/BEGIN/{c=""} {c=c $0 "\n"} /END/{printf "%s", c | "openssl x509 -noout -subject"; close("openssl x509 -noout -subject")}' \
+  | sed -E 's/.*OU=([A-Z0-9]{10}), O=(.*), C=.*/\1  \2/' | sort -u
+```
+
+Xcode の Settings → Accounts、または developer.apple.com の Membership details でも確認できます。証明書名の括弧内の ID(`Apple Development: Name (XXXXXXXXXX)`)はチーム ID ではありません。
 
 1. **⌘N** で新しい下書きを作り、**⌘V** で文章を貼り付けるか、自分で書く。
 2. **⇧⌘P** でプレビューを切り替え、**⇧⌘F** で Markdown を整形。

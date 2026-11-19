@@ -59,7 +59,15 @@ By default the build is ad-hoc signed, so no Apple Developer account is needed. 
 EDITAN_TEAM_ID=XXXXXXXXXX ./Scripts/install.sh
 ```
 
-Find the team ID in Xcode under Settings → Accounts, or under Membership details on developer.apple.com (it is not the ID in parentheses in the certificate name).
+To list the team IDs of the Apple Development certificates in your keychain (team ID on the left, team name on the right):
+
+```sh
+security find-certificate -a -c "Apple Development" -p \
+  | awk '/BEGIN/{c=""} {c=c $0 "\n"} /END/{printf "%s", c | "openssl x509 -noout -subject"; close("openssl x509 -noout -subject")}' \
+  | sed -E 's/.*OU=([A-Z0-9]{10}), O=(.*), C=.*/\1  \2/' | sort -u
+```
+
+You can also find it in Xcode under Settings → Accounts, or under Membership details on developer.apple.com. The ID in parentheses in the certificate name (`Apple Development: Name (XXXXXXXXXX)`) is not the team ID.
 
 1. Press **⌘N** for a scratch buffer. Paste text with **⌘V**, or start writing.
 2. Toggle the preview with **⇧⌘P** or format Markdown with **⇧⌘F**.
