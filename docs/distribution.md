@@ -58,7 +58,52 @@ export NOTARY_PROFILE='macos-notary'
 これはローカル用の ad-hoc 署名アプリだけを作り、配布用 DMG は作りません。
 既存の install.sh と生成プロジェクトの出力先を分けており、/Applications の常用版を置き換えません。
 
-## 公開前の確認
+## GitHub Actions でのビルド・公証
+
+`.github/workflows/release.yml` は、main にアプリ関連の変更(`Editan/**`、`project.yml`、
+`Scripts/release.sh`、このワークフロー)が push されると、セキュリティ回帰テストのあと
+macOS runner 上で上と同じ `Scripts/release.sh` を実行し、DMG と `.sha256` を editan-releases の
+GitHub Release として**そのまま公開**します。README や LP だけの変更ではリリースしません。
+公証は App Store Connect API キーで行います(`NOTARY_KEY_PATH` / `NOTARY_KEY_ID` / `NOTARY_ISSUER`)。
+
+バージョン番号とビルド番号は自動で決まります。
+
+- バージョン: editan-releases の最新リリースのパッチ番号を 1 つ上げたもの(`0.1.0` → `0.1.1`)。
+  `project.yml` の `MARKETING_VERSION` がそれより大きければ、その番号を使います。
+  マイナー/メジャーを上げたいときは `MARKETING_VERSION` を `0.2.0` などに書き換えてマージします。
+- ビルド番号: main のコミット数(`git rev-list --count HEAD`)。
+
+### 初回のみ必要な設定
+
+1. **Developer ID 証明書を .p12 で書き出す**: キーチェーンアクセス →「自分の証明書」で
+   `Developer ID Application: ...` を右クリック →「書き出す」(秘密鍵ごと、パスワード付き)。
+2. **App Store Connect API キーを作る**: App Store Connect → ユーザとアクセス → 統合 →
+   App Store Connect API → チームキー で、アクセス「Developer」のキーを生成。
+   `.p8` はこのときしかダウンロードできません。キー ID と Issuer ID を控えます。
+3. **editan-releases 用のトークンを作る**: GitHub → Settings → Developer settings →
+   Fine-grained tokens で、対象リポジトリを `kohey18/editan-releases` のみ、権限を
+   Contents: Read and write にしたトークンを作成。
+4. **Environment とシークレットを登録する**: このリポジトリの Settings → Environments で
+   `release` を作り(Deployment branches は `main` のみ推奨)、次の Environment secrets を登録します。
+
+| 名前 | 中身 |
+| --- | --- |
+| `DEVELOPER_ID_P12_BASE64` | 手順 1 の .p12 を `base64 -i Certificates.p12` した文字列 |
+| `DEVELOPER_ID_P12_PASSWORD` | 手順 1 で付けたパスワード |
+| `NOTARY_API_KEY_BASE64` | 手順 2 の .p8 を `base64 -i AuthKey_XXXX.p8` した文字列 |
+| `NOTARY_API_KEY_ID` | 手順 2 のキー ID |
+| `NOTARY_API_ISSUER_ID` | 手順 2 の Issuer ID |
+| `RELEASES_TOKEN` | 手順 3 のトークン |
+
+証明書名やチームが `release.sh` の既定値と違う場合は、Repository variables の
+`DEVELOPER_ID_APPLICATION` / `APPLE_TEAM_ID` で上書きします。
+
+### 手動実行
+
+失敗したリリースのやり直しなどは、Actions → Release → Run workflow から実行できます。
+version を空欄にすると上の規則で自動決定し、入力するとその番号でリリースします。
+
+## 公開前の確認(手動でリリースする場合)
 
 - 別の Mac/新規ユーザーで、ブラウザから DMG をダウンロードして Applications にコピーし起動。
 - 開発元未確認の回避操作や `xattr` による隔離属性解除が不要なことを確認。
