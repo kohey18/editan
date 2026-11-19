@@ -46,6 +46,14 @@ cd editan
 
 Release ビルドを `/Applications/Editan.app` にインストールします。同じ場所の既存アプリは置き換わります。Applications から起動し、起動後は **⌥⌘E** で呼び出せます。
 
+標準では ad-hoc 署名でビルドするため、Apple Developer アカウントは不要です。ただし再ビルドのたびに別アプリとみなされ、macOS の権限許可や Keychain のアクセス確認がやり直しになります。Xcode にサインイン済みの Apple Developer チームがあれば、チーム ID を指定すると Apple Development 証明書で署名され、再ビルド後も引き継がれます。
+
+```sh
+EDITAN_TEAM_ID=XXXXXXXXXX ./Scripts/install.sh
+```
+
+チーム ID は Xcode の Settings → Accounts、または developer.apple.com の Membership details で確認できます(証明書名の括弧内の ID とは別物です)。
+
 1. **⌘N** で新しい下書きを作り、**⌘V** で文章を貼り付けるか、自分で書く。
 2. **⇧⌘P** でプレビューを切り替え、**⇧⌘F** で Markdown を整形。
 3. **⌘C**・**⇧⌘C**・**⌥⌘C** でコピーし、いつものアプリへ貼り付ける。

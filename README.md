@@ -53,6 +53,14 @@ cd editan
 
 The script builds Release and installs `/Applications/Editan.app`, replacing an existing copy. Open Editan from Applications, or press **⌥⌘E** once it is running.
 
+By default the build is ad-hoc signed, so no Apple Developer account is needed. Each rebuild then looks like a different app, though, so macOS permission grants and Keychain access prompts start over. If you are signed in to Xcode with an Apple Developer team, pass its team ID to sign with your Apple Development certificate and keep them across rebuilds:
+
+```sh
+EDITAN_TEAM_ID=XXXXXXXXXX ./Scripts/install.sh
+```
+
+Find the team ID in Xcode under Settings → Accounts, or under Membership details on developer.apple.com (it is not the ID in parentheses in the certificate name).
+
 1. Press **⌘N** for a scratch buffer. Paste text with **⌘V**, or start writing.
 2. Toggle the preview with **⇧⌘P** or format Markdown with **⇧⌘F**.
 3. Copy with **⌘C**, **⇧⌘C**, or **⌥⌘C**, then paste into the destination.

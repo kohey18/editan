@@ -4,15 +4,16 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 xcodegen generate
-# Sign the local install with the Apple Development certificate (team 3U5Y9G26T3) when it
-# exists, so TCC permissions survive rebuilds (ad-hoc signing is identified by the binary's
-# hash and loses them every time). Falls back to the project default (ad-hoc) otherwise.
-# CI and release.sh are unaffected: project.yml stays ad-hoc.
+# Set EDITAN_TEAM_ID to your Apple Developer team ID to sign the local install with your
+# Apple Development certificate, so TCC permissions survive rebuilds (ad-hoc signing is
+# identified by the binary's hash and loses them every time). Without it, the build uses the
+# project default (ad-hoc). CI and release.sh are unaffected: project.yml stays ad-hoc.
 SIGN_ARGS=()
-if security find-identity -v -p codesigning 2>/dev/null | grep -q "Apple Development"; then
-  SIGN_ARGS=(-allowProvisioningUpdates CODE_SIGN_STYLE=Automatic CODE_SIGN_IDENTITY="Apple Development" DEVELOPMENT_TEAM=3U5Y9G26T3)
+if [ -n "${EDITAN_TEAM_ID:-}" ]; then
+  echo "note: signing with Apple Development (team $EDITAN_TEAM_ID)"
+  SIGN_ARGS=(-allowProvisioningUpdates CODE_SIGN_STYLE=Automatic CODE_SIGN_IDENTITY="Apple Development" DEVELOPMENT_TEAM="$EDITAN_TEAM_ID")
 else
-  echo "note: no Apple Development identity; installing an ad-hoc signed build"
+  echo "note: EDITAN_TEAM_ID is not set; installing an ad-hoc signed build"
 fi
 xcodebuild -project Editan.xcodeproj -scheme Editan -configuration Release \
   -derivedDataPath build/DerivedData "${SIGN_ARGS[@]}" build
