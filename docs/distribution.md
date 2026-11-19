@@ -60,9 +60,18 @@ export NOTARY_PROFILE='macos-notary'
 
 ## GitHub Actions でのビルド・公証
 
-`.github/workflows/release.yml` は、手動実行(workflow_dispatch)で上と同じ `Scripts/release.sh` を
-macOS runner 上で実行し、DMG と `.sha256` を editan-releases の **Draft** Release に添付します。
+`.github/workflows/release.yml` は、main にアプリ関連の変更(`Editan/**`、`project.yml`、
+`Scripts/release.sh`、このワークフロー)が push されると、セキュリティ回帰テストのあと
+macOS runner 上で上と同じ `Scripts/release.sh` を実行し、DMG と `.sha256` を editan-releases の
+GitHub Release として**そのまま公開**します。README や LP だけの変更ではリリースしません。
 公証は App Store Connect API キーで行います(`NOTARY_KEY_PATH` / `NOTARY_KEY_ID` / `NOTARY_ISSUER`)。
+
+バージョン番号とビルド番号は自動で決まります。
+
+- バージョン: editan-releases の最新リリースのパッチ番号を 1 つ上げたもの(`0.1.0` → `0.1.1`)。
+  `project.yml` の `MARKETING_VERSION` がそれより大きければ、その番号を使います。
+  マイナー/メジャーを上げたいときは `MARKETING_VERSION` を `0.2.0` などに書き換えてマージします。
+- ビルド番号: main のコミット数(`git rev-list --count HEAD`)。
 
 ### 初回のみ必要な設定
 
@@ -89,12 +98,12 @@ macOS runner 上で実行し、DMG と `.sha256` を editan-releases の **Draft
 証明書名やチームが `release.sh` の既定値と違う場合は、Repository variables の
 `DEVELOPER_ID_APPLICATION` / `APPLE_TEAM_ID` で上書きします。
 
-### 実行
+### 手動実行
 
-Actions → Release → Run workflow で version(例: `0.1.1`)と build number(前回より大きい整数)を入力します。
-成功すると editan-releases に `vVERSION` の Draft Release ができるので、下の確認をしてから公開します。
+失敗したリリースのやり直しなどは、Actions → Release → Run workflow から実行できます。
+version を空欄にすると上の規則で自動決定し、入力するとその番号でリリースします。
 
-## 公開前の確認
+## 公開前の確認(手動でリリースする場合)
 
 - 別の Mac/新規ユーザーで、ブラウザから DMG をダウンロードして Applications にコピーし起動。
 - 開発元未確認の回避操作や `xattr` による隔離属性解除が不要なことを確認。

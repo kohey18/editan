@@ -1,16 +1,22 @@
 name: Release
-# Builds a Developer ID signed, notarized DMG with Scripts/release.sh and attaches it to a
-# draft GitHub Release in kohey18/editan-releases. Publish the draft by hand after testing.
-# Setup (secrets, environment): docs/distribution.md
+# On every push to main that touches the app, builds a Developer ID signed, notarized DMG with
+# Scripts/release.sh and publishes it as a GitHub Release in kohey18/editan-releases.
+# Version: the latest published release with the patch number bumped, or MARKETING_VERSION in
+# project.yml when that is higher (edit it for a minor/major release). Build number: the
+# number of commits on main. Setup (secrets, environment): docs/distribution.md
 on:
+  push:
+    branches: [main]
+    paths:
+      - Editan/**
+      - project.yml
+      - Scripts/release.sh
+      - .github/workflows/release.yml
   workflow_dispatch:
     inputs:
       version:
-        description: Version (e.g. 0.1.1)
-        required: true
-      build_number:
-        description: Build number (positive integer, larger than the previous release)
-        required: true
+        description: Version (e.g. 0.1.1). Leave empty to compute it automatically.
+        required: false
 permissions:
   contents: read
 concurrency:
@@ -22,15 +28,43 @@ jobs:
     timeout-minutes: 60
     environment: release
     env:
-      VERSION: ${{ inputs.version }}
-      BUILD_NUMBER: ${{ inputs.build_number }}
       RELEASES_REPO: kohey18/editan-releases
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          fetch-depth: 0
           persist-credentials: false
       - name: Install build tools
         run: brew install xcodegen
+      - name: Run security regression tests
+        run: |
+          set -euo pipefail
+          xcodegen generate
+          xcodebuild -project Editan.xcodeproj -scheme EditanSecurityTests -destination 'platform=macOS' \
+            -derivedDataPath build/TestDerivedData test
+      - name: Decide version and build number
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          LATEST=$(gh release view -R "$RELEASES_REPO" --json tagName -q .tagName 2>/dev/null || echo v0.0.0)
+          LATEST=${LATEST#v}
+          BASE=$(awk -F'"' '/MARKETING_VERSION:/{print $2; exit}' project.yml)
+          if [ -n "${INPUT_VERSION:-}" ]; then
+            VERSION=$INPUT_VERSION
+          elif [ "$(printf '%s\n%s\n' "$LATEST" "$BASE" | sort -V | tail -n 1)" != "$LATEST" ]; then
+            VERSION=$BASE
+          else
+            IFS=. read -r MAJOR MINOR PATCH <<< "$LATEST"
+            VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          fi
+          if gh release view "v$VERSION" -R "$RELEASES_REPO" >/dev/null 2>&1; then
+            echo "::error::v$VERSION already exists in $RELEASES_REPO"; exit 1
+          fi
+          BUILD_NUMBER=$(git rev-list --count HEAD)
+          echo "Latest release: $LATEST, project.yml: $BASE -> releasing $VERSION ($BUILD_NUMBER)"
+          { echo "VERSION=$VERSION"; echo "BUILD_NUMBER=$BUILD_NUMBER"; } >> "$GITHUB_ENV"
       - name: Import Developer ID certificate into a temporary keychain
         env:
           P12_BASE64: ${{ secrets.DEVELOPER_ID_P12_BASE64 }}
@@ -77,10 +111,10 @@ jobs:
             build/distribution/Editan-"$VERSION".*/Editan-"$VERSION".dmg.sha256 dist/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: Editan-${{ inputs.version }}
+          name: Editan-${{ env.VERSION }}
           path: dist/
           if-no-files-found: error
-      - name: Create a draft release in editan-releases
+      - name: Publish the release in editan-releases
         env:
           GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
         run: |
@@ -91,8 +125,10 @@ jobs:
           - macOS 14 or later; Apple Silicon and Intel in one download.
           - Open \`Editan-$VERSION.dmg\` and drag Editan to Applications.
           - Download the \`.sha256\` file to verify the DMG checksum if needed.
+
+          Built from kohey18/editan@$GITHUB_SHA.
           EOF
-          gh release create "v$VERSION" dist/* -R "$RELEASES_REPO" --draft \
+          gh release create "v$VERSION" dist/* -R "$RELEASES_REPO" --latest \
             --title "Editan $VERSION" --notes-file "$RUNNER_TEMP/notes.md"
       - name: Clean up signing material
         if: always()
