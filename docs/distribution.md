@@ -58,6 +58,42 @@ export NOTARY_PROFILE='macos-notary'
 これはローカル用の ad-hoc 署名アプリだけを作り、配布用 DMG は作りません。
 既存の install.sh と生成プロジェクトの出力先を分けており、/Applications の常用版を置き換えません。
 
+## GitHub Actions でのビルド・公証
+
+`.github/workflows/release.yml` は、手動実行(workflow_dispatch)で上と同じ `Scripts/release.sh` を
+macOS runner 上で実行し、DMG と `.sha256` を editan-releases の **Draft** Release に添付します。
+公証は App Store Connect API キーで行います(`NOTARY_KEY_PATH` / `NOTARY_KEY_ID` / `NOTARY_ISSUER`)。
+
+### 初回のみ必要な設定
+
+1. **Developer ID 証明書を .p12 で書き出す**: キーチェーンアクセス →「自分の証明書」で
+   `Developer ID Application: ...` を右クリック →「書き出す」(秘密鍵ごと、パスワード付き)。
+2. **App Store Connect API キーを作る**: App Store Connect → ユーザとアクセス → 統合 →
+   App Store Connect API → チームキー で、アクセス「Developer」のキーを生成。
+   `.p8` はこのときしかダウンロードできません。キー ID と Issuer ID を控えます。
+3. **editan-releases 用のトークンを作る**: GitHub → Settings → Developer settings →
+   Fine-grained tokens で、対象リポジトリを `kohey18/editan-releases` のみ、権限を
+   Contents: Read and write にしたトークンを作成。
+4. **Environment とシークレットを登録する**: このリポジトリの Settings → Environments で
+   `release` を作り(Deployment branches は `main` のみ推奨)、次の Environment secrets を登録します。
+
+| 名前 | 中身 |
+| --- | --- |
+| `DEVELOPER_ID_P12_BASE64` | 手順 1 の .p12 を `base64 -i Certificates.p12` した文字列 |
+| `DEVELOPER_ID_P12_PASSWORD` | 手順 1 で付けたパスワード |
+| `NOTARY_API_KEY_BASE64` | 手順 2 の .p8 を `base64 -i AuthKey_XXXX.p8` した文字列 |
+| `NOTARY_API_KEY_ID` | 手順 2 のキー ID |
+| `NOTARY_API_ISSUER_ID` | 手順 2 の Issuer ID |
+| `RELEASES_TOKEN` | 手順 3 のトークン |
+
+証明書名やチームが `release.sh` の既定値と違う場合は、Repository variables の
+`DEVELOPER_ID_APPLICATION` / `APPLE_TEAM_ID` で上書きします。
+
+### 実行
+
+Actions → Release → Run workflow で version(例: `0.1.1`)と build number(前回より大きい整数)を入力します。
+成功すると editan-releases に `vVERSION` の Draft Release ができるので、下の確認をしてから公開します。
+
 ## 公開前の確認
 
 - 別の Mac/新規ユーザーで、ブラウザから DMG をダウンロードして Applications にコピーし起動。

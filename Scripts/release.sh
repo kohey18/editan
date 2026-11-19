@@ -11,6 +11,7 @@ usage() {
   echo "Usage: $SCRIPT_NAME --check | --build-only VERSION BUILD_NUMBER | VERSION BUILD_NUMBER"
   echo "Defaults: Kohei Kawai Developer ID, team 3U5Y9G26T3, Keychain profile macos-notary."
   echo "Override with DEVELOPER_ID_APPLICATION, APPLE_TEAM_ID, and NOTARY_PROFILE."
+  echo "Set NOTARY_KEY_PATH, NOTARY_KEY_ID, and NOTARY_ISSUER to notarize with an App Store Connect API key instead (CI)."
   echo "--build-only produces a local ad-hoc app, never a distributable DMG."
 }
 case "$MODE" in
@@ -35,8 +36,12 @@ if [[ "$MODE" != --build-only ]]; then
   echo "$IDENTITIES" | /usr/bin/grep -F -- "\"$DEVELOPER_ID_APPLICATION\"" >/dev/null || {
     echo 'No valid matching certificate and private key in the Keychain.' >&2; exit 1
   }
-  NOTARY_PROFILE=${NOTARY_PROFILE:-macos-notary}
-  xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" --output-format json >/dev/null
+  if [[ -n "${NOTARY_KEY_PATH:-}" ]]; then
+    NOTARY_AUTH=(--key "$NOTARY_KEY_PATH" --key-id "${NOTARY_KEY_ID:?Set NOTARY_KEY_ID}" --issuer "${NOTARY_ISSUER:?Set NOTARY_ISSUER}")
+  else
+    NOTARY_AUTH=(--keychain-profile "${NOTARY_PROFILE:-macos-notary}")
+  fi
+  xcrun notarytool history "${NOTARY_AUTH[@]}" --output-format json >/dev/null
   if [[ "$MODE" == --check ]]; then
     echo 'Developer ID identity and notarization credentials verified.'; exit 0
   fi
@@ -71,13 +76,13 @@ if [[ "$MODE" == --build-only ]]; then
 fi
 notarize() {
   local archive=$1 result=$2
-  xcrun notarytool submit "$archive" --keychain-profile "$NOTARY_PROFILE" \
+  xcrun notarytool submit "$archive" "${NOTARY_AUTH[@]}" \
     --wait --output-format json > "$result"
   local verdict=$(/usr/bin/plutil -extract status raw -o - "$result")
   if [[ "$verdict" != Accepted ]]; then
     echo "Notarization failed. Submission details: $result" >&2
     local submission=$(/usr/bin/plutil -extract id raw -o - "$result")
-    xcrun notarytool log "$submission" --keychain-profile "$NOTARY_PROFILE" "${result%.json}.log.json" || true
+    xcrun notarytool log "$submission" "${NOTARY_AUTH[@]}" "${result%.json}.log.json" || true
     return 1
   fi
 }

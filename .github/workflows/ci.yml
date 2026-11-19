@@ -32,6 +32,7 @@ jobs:
           python3 Scripts/build_site.py
           node --check docs/assets/site.js
           zsh -n Scripts/install.sh
+          zsh -n Scripts/release.sh
       - name: Generate Xcode project
         run: xcodegen generate
       - name: Build app
